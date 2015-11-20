@@ -1,7 +1,7 @@
 __author__ = 'yaron'
 
 
-class Piece():
+class Piece(object):
 
     WHITE = 1
     BLACK = 0

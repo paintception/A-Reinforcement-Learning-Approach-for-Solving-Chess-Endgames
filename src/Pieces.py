@@ -37,6 +37,9 @@ class Piece(object):
     def check_pos(self, d_row, d_col):
         return False
 
+    def restricted_positions(self):
+        return []
+
 
 class King(Piece):
 
@@ -46,6 +49,21 @@ class King(Piece):
             return True
         else:
             return False
+
+    def restricted_positions(self):
+        pos = []
+        pos.append((self.row+1, self.col-1))
+        pos.append((self.row+1, self.col))
+        pos.append((self.row+1, self.col+1))
+
+        pos.append((self.row-1, self.col-1))
+        pos.append((self.row-1, self.col))
+        pos.append((self.row-1, self.col+1))
+
+        pos.append((self.row, self.col-1))
+        pos.append((self.row, self.col+1))
+
+        return pos
 
 
 class Rook(Piece):
@@ -57,6 +75,15 @@ class Rook(Piece):
             return True
 
         return False
+
+    def restricted_positions(self):
+        pos = []
+        for x in range(0,7):
+            if x != self.row:
+                pos.append((x, self.col))
+            if x != self.col:
+                pos.append((self.row, x))
+
 
 if __name__ == '__main__':
     print("King")

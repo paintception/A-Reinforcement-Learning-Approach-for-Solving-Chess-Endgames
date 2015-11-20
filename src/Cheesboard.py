@@ -8,14 +8,25 @@ class ChessBoard:
         self.pieces = []
         self.num_pieces = 0
 
-    def add_piece(self, piece):
-        self.pieces.append(piece)
-        self.num_pieces += 1
-
     def is_valid_to_add(self,piece):
+    
         for p in self.pieces:
-            print p
+            # They have to be in different color
+            if piece.color is not p.color:
+                for invalidPos in  piece.restricted_positions():
+                    if(piece.row == invalidPos[0]) and (piece.col == invalidPos[1]):
+                        print 'asdfasdf'
+                        return 0
+        return 1
 
+    def add_piece(self, piece):
+        
+        if self.is_valid_to_add(piece):
+            self.pieces.append(piece)
+            self.num_pieces += 1
+            return 1
+
+        return 0
 
 
     def draw(self):
@@ -55,7 +66,6 @@ class ChessBoard:
             
             sys.stdout.write('|\n')
     
-
         sys.stdout.write('  +')
         for k in range(0,8):
             sys.stdout.write('---+')
@@ -63,9 +73,13 @@ class ChessBoard:
 
 if __name__ == '__main__':
     board = ChessBoard()
-    board.add_piece( Rook(1,2,Piece.WHITE))
-    board.add_piece( King(6,3,Piece.BLACK))
-    board.add_piece( Rook(6,2,Piece.BLACK))
+    rw = Rook(1,2,Piece.WHITE)
+    rb = Rook(1,2,Piece.BLACK)
+    print     board.add_piece(rw)
+    print     board.add_piece(rb)
+#    board.add_piece( Rook(1,2,Piece.WHITE))
+#    board.add_piece( King(6,3,Piece.BLACK))
+#    board.add_piece( Rook(6,2,Piece.BLACK))
     board.draw()
 
 

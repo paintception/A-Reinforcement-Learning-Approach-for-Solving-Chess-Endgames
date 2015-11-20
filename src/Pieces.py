@@ -52,6 +52,7 @@ class King(Piece):
 
     def restricted_positions(self):
         pos = []
+        pos.append((self.row, self.col))
         pos.append((self.row+1, self.col-1))
         pos.append((self.row+1, self.col))
         pos.append((self.row+1, self.col+1))
@@ -78,12 +79,13 @@ class Rook(Piece):
 
     def restricted_positions(self):
         pos = []
-        for x in range(0,7):
+        pos.append((self.row, self.col))
+        for x in range(0,8):
             if x != self.row:
                 pos.append((x, self.col))
             if x != self.col:
                 pos.append((self.row, x))
-
+        return pos
 
 if __name__ == '__main__':
     print("King")

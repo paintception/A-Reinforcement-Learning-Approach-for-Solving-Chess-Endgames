@@ -45,7 +45,8 @@ class King(Piece):
 
     def check_pos(self, d_row, d_col):
         dist = abs(d_row-self.row) + abs(d_col-self.col)
-        if dist == 1:
+
+        if dist == 1 or (dist == 2 and self.row !=  d_row and self.col != d_col):
             return True
         else:
             return False

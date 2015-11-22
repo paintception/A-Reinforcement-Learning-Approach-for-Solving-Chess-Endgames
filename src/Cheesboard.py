@@ -5,8 +5,8 @@ from Pieces import King, Rook, Piece
 class ChessBoard:
     NOTHING = 'PLAYING'
     BLACK_KING_CHECKED = 'BLACK_KING_CHECKED'
-    DRAW = 'DRAW' 
-    WIN = 'WIN' 
+    BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
+    DRAW = 'DRAW'
 
     def __init__(self,turn):
         self.pieces = []
@@ -113,7 +113,7 @@ class ChessBoard:
             o_row,o_col = piece.row, piece.col
             piece.move(row,col)
             
-            print '(%d,%d) -> (%d,%d) OK' % (o_row,o_col,row,col) 
+            print '(%d,%d) -> (%d,%d) OK' % (o_row,o_col,row,col)
         except:
             print '(%d,%d) -> (%d,%d) INVALID' % (piece.row,piece.col,row,col) 
             return 0
@@ -129,12 +129,18 @@ class ChessBoard:
                 kb = p
             if type(p) is Rook  and p.color is Piece.WHITE:
                 rw = p
-    
-        if (kb.row,kb.col) in rw.restricted_positions():
-            self.state = ChessBoard.BLACK_KING_CHECKED 
-            return
 
-        self.state = ChessBoard.NOTHING 
+        restr = (set(kw.possible_moves()) | set(rw.possible_moves()))
+
+        checked = (kb.row,kb.col) in rw.restricted_positions()
+        if checked and set(kb.possible_moves()).issubset(restr):
+            self.state = ChessBoard.BLACK_KING_CHECKMATE
+        elif checked:
+            self.state = ChessBoard.BLACK_KING_CHECKED
+        elif not checked and restr.issubset(set(kb.possible_moves())):
+            self.state = ChessBoard.DRAW
+        else:
+            self.state = ChessBoard.NOTHING
 
     def change_turn(self):
         if self.turn == Piece.WHITE:
@@ -153,6 +159,7 @@ class ChessBoard:
             
             self.update_state()
             self.change_turn()
+# End of class ------
 
 def receiveCommand(msg):
     line  = raw_input(msg)

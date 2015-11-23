@@ -1,7 +1,7 @@
 __author__ = 'yaron'
 
 
-class Piece():
+class Piece(object):
 
     WHITE = 1
     BLACK = 0
@@ -45,13 +45,15 @@ class King(Piece):
 
     def check_pos(self, d_row, d_col):
         dist = abs(d_row-self.row) + abs(d_col-self.col)
-        if dist == 1:
+
+        if dist == 1 or (dist == 2 and self.row !=  d_row and self.col != d_col):
             return True
         else:
             return False
 
     def restricted_positions(self):
         pos = []
+        pos.append((self.row, self.col))
         pos.append((self.row+1, self.col-1))
         pos.append((self.row+1, self.col))
         pos.append((self.row+1, self.col+1))
@@ -78,12 +80,13 @@ class Rook(Piece):
 
     def restricted_positions(self):
         pos = []
-        for x in range(0,7):
+        pos.append((self.row, self.col))
+        for x in range(0,8):
             if x != self.row:
                 pos.append((x, self.col))
             if x != self.col:
                 pos.append((self.row, x))
-
+        return pos
 
 if __name__ == '__main__':
     print("King")

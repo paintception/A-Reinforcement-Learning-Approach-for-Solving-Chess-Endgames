@@ -13,7 +13,6 @@ class Window:
                 fr = Frame(window)
 	        self.create_label(fr)	
 
-               
 
         def create_label(self,window):
             self.console = Label(textvariable=self.console_str, bg = '#00ff00',width= 80) 
@@ -30,7 +29,6 @@ class Window:
 
 		#VERTICAL LINES
 		#c.create_line(x, x, x, 100)
-#
 
 		#CREATE BLOCKS
 		#c.create_rectangle(x, x, x+gap, x+gap, fill="blue") # x y width height

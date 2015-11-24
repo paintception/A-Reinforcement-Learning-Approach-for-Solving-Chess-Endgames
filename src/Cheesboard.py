@@ -1,6 +1,7 @@
 __author__ = 'yaron'
 import sys
 from Pieces import King, Rook, Piece
+import random
 
 class ChessBoard:
     NOTHING = 'PLAYING'
@@ -8,7 +9,7 @@ class ChessBoard:
     BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
     DRAW = 'DRAW'
 
-    def __init__(self,turn):
+    def __init__(self,turn=Piece.WHITE):
         self.pieces = []
         self.num_pieces = 0
         self.round = 1
@@ -18,28 +19,26 @@ class ChessBoard:
     def is_valid_to_add(self,piece):
         """
         In case that the piece cannot be placed on the board
-        this function raises an exception
+        this function returns false
 
         """
         for p in self.pieces:
             if piece.row == p.row and piece.col == p.col:
-                raise Exception('Can\'t place this piece here')
-            # They have to be in different color
-            if piece.color is not p.color:
-                for invalidPos in  p.restricted_positions():
-                    if(piece.row == invalidPos[0]) and (piece.col == invalidPos[1]):
-                        raise Exception('Can\'t place this piece here')
-        return 1
+                return False
+
+            if type(piece) is King and type(p) is King and (piece.row, piece.col) in p.restricted_positions():
+                return False
+
+        return True
 
     def add_piece(self, piece):
         
         if self.is_valid_to_add(piece):
             self.pieces.append(piece)
             self.num_pieces += 1
-            return 1
+            return True
 
-        return 0
-
+        return False
 
     def draw(self):
 
@@ -159,6 +158,23 @@ class ChessBoard:
             
             self.update_state()
             self.change_turn()
+
+    @staticmethod
+    def get_random_chessboard():
+        rboard = None
+        while True:
+            rboard = ChessBoard()
+            all_added = rboard.add_piece(King(random.randint(0,7), random.randint(0,7), Piece.BLACK))
+            all_added = rboard.add_piece(King(random.randint(0,7), random.randint(0,7), Piece.WHITE))
+            all_added = rboard.add_piece(Rook(random.randint(0,7), random.randint(0,7), Piece.WHITE))
+            if all_added:
+                rboard.update_state()
+                if rboard.state is not ChessBoard.BLACK_KING_CHECKMATE:
+                    break
+        return rboard
+
+
+
 # End of class ------
 
 def receiveCommand(msg):
@@ -181,11 +197,11 @@ if __name__ == '__main__':
     board = ChessBoard(Piece.WHITE)
 
     rw = Rook(1,2,Piece.WHITE)
-    rb = King(2,5,Piece.BLACK)
+    kb = King(2,5,Piece.BLACK)
     kw = King(4,6,Piece.WHITE)
 
     board.add_piece(rw)
-    board.add_piece(rb)
+    board.add_piece(kb)
     board.add_piece(kw)
     
     board.manual_play()

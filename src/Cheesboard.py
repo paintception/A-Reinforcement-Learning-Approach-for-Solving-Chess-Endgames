@@ -32,7 +32,9 @@ class ChessBoard:
         return True
 
     def add_piece(self, piece):
-        
+        """
+        Add pieces to the list of pieces.
+        """
         if self.is_valid_to_add(piece):
             self.pieces.append(piece)
             self.num_pieces += 1
@@ -45,6 +47,10 @@ class ChessBoard:
         print 'State: ', self.state
         print 'Round:', self.round
 
+        sys.stdout.write('  ')
+        for k in range(0,8):
+            sys.stdout.write('  '+str(k)+' ')
+        sys.stdout.write('\n')
 
         for row in range(0,8):
 
@@ -94,7 +100,7 @@ class ChessBoard:
    
     def play_move(self,row,col,typ=None,realPiece=None):
         """
-        Returns 0 when the move is invalid
+        Returns 0 when the move is invalid.
         """
         typp = None
         piece = None

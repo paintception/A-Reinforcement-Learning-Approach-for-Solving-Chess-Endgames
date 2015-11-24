@@ -60,11 +60,11 @@ class King(Piece):
     def possible_moves(self):
         rows = []
         cols = []
-        if self.row + 1 < 7:
+        if self.row + 1 <= 7:
             rows.append(self.row+1)
         if self.row - 1 > 0:
             rows.append(self.row-1)
-        if self.col + 1 < 7:
+        if self.col + 1 <= 7:
             cols.append(self.col+1)
         if self.col - 1 > 0:
             cols.append(self.col-1)
@@ -87,7 +87,6 @@ class Rook(Piece):
 
     def possible_moves(self):
         pos = []
-        pos.append((self.row, self.col))
         for x in range(0,8):
             if x != self.row:
                 pos.append((x, self.col))

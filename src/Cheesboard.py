@@ -32,7 +32,9 @@ class ChessBoard:
         return 1
 
     def add_piece(self, piece):
-        
+        """
+        Add pieces to the list of pieces.
+        """
         if self.is_valid_to_add(piece):
             self.pieces.append(piece)
             self.num_pieces += 1
@@ -42,7 +44,9 @@ class ChessBoard:
 
 
     def draw(self):
-
+        """
+        This will just draw the ChessBoard.
+        """
         sys.stdout.write('  ')
         for k in range(0,8):
             sys.stdout.write('  '+str(k)+' ')
@@ -86,7 +90,7 @@ class ChessBoard:
    
     def play_move(self,row,col,typ):
         """
-        Returns 0 when the move is invalid
+        Returns 0 when the move is invalid.
         """
         typp = None
         piece = None
@@ -154,6 +158,11 @@ class ChessBoard:
             self.update_state()
             self.change_turn()
 
+    def random_play(self):
+        while True:
+            pass
+
+
 def receiveCommand(msg):
     line  = raw_input(msg)
     while ( len(line) is not 3) or (line[0]  not in 'KkrR') or is_number(line[1]) is 0 or is_number(line[2]) is 0:
@@ -173,13 +182,13 @@ if __name__ == '__main__':
     # White plays first
     board = ChessBoard(Piece.WHITE)
 
-    rw = Rook(1,2,Piece.WHITE)
-    rb = King(2,5,Piece.BLACK)
-    kw = King(4,6,Piece.WHITE)
+    wr = Rook(5,2,Piece.WHITE)
+    bk = King(2,5,Piece.BLACK)
+    wk = King(4,6,Piece.WHITE)
 
-    board.add_piece(rw)
-    board.add_piece(rb)
-    board.add_piece(kw)
+    board.add_piece(wr)
+    board.add_piece(wk)
+    board.add_piece(bk)
     
     board.manual_play()
 

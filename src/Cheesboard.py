@@ -1,14 +1,15 @@
 __author__ = 'yaron'
 import sys
 from Pieces import King, Rook, Piece
+import random
 
 class ChessBoard:
     NOTHING = 'PLAYING'
     BLACK_KING_CHECKED = 'BLACK_KING_CHECKED'
-    DRAW = 'DRAW' 
-    WIN = 'WIN' 
+    BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
+    DRAW = 'DRAW'
 
-    def __init__(self,turn):
+    def __init__(self,turn=Piece.WHITE):
         self.pieces = []
         self.num_pieces = 0
         self.round = 1
@@ -18,18 +19,17 @@ class ChessBoard:
     def is_valid_to_add(self,piece):
         """
         In case that the piece cannot be placed on the board
-        this function raises an exception
+        this function returns false
 
         """
         for p in self.pieces:
             if piece.row == p.row and piece.col == p.col:
-                raise Exception('Can\'t place this piece here')
-            # They have to be in different color
-            if piece.color is not p.color:
-                for invalidPos in  p.restricted_positions():
-                    if(piece.row == invalidPos[0]) and (piece.col == invalidPos[1]):
-                        raise Exception('Can\'t place this piece here')
-        return 1
+                return False
+
+            if type(piece) is King and type(p) is King and (piece.row, piece.col) in p.restricted_positions():
+                return False
+
+        return True
 
     def add_piece(self, piece):
         """
@@ -38,10 +38,9 @@ class ChessBoard:
         if self.is_valid_to_add(piece):
             self.pieces.append(piece)
             self.num_pieces += 1
-            return 1
+            return True
 
-        return 0
-
+        return False
 
     def draw(self):
         """
@@ -117,7 +116,7 @@ class ChessBoard:
             o_row,o_col = piece.row, piece.col
             piece.move(row,col)
             
-            print '(%d,%d) -> (%d,%d) OK' % (o_row,o_col,row,col) 
+            print '(%d,%d) -> (%d,%d) OK' % (o_row,o_col,row,col)
         except:
             print '(%d,%d) -> (%d,%d) INVALID' % (piece.row,piece.col,row,col) 
             return 0
@@ -133,12 +132,18 @@ class ChessBoard:
                 kb = p
             if type(p) is Rook  and p.color is Piece.WHITE:
                 rw = p
-    
-        if (kb.row,kb.col) in rw.restricted_positions():
-            self.state = ChessBoard.BLACK_KING_CHECKED 
-            return
 
-        self.state = ChessBoard.NOTHING 
+        restr = (set(kw.possible_moves()) | set(rw.possible_moves()))
+
+        checked = (kb.row,kb.col) in rw.restricted_positions()
+        if checked and set(kb.possible_moves()).issubset(restr):
+            self.state = ChessBoard.BLACK_KING_CHECKMATE
+        elif checked:
+            self.state = ChessBoard.BLACK_KING_CHECKED
+        elif not checked and restr.issubset(set(kb.possible_moves())):
+            self.state = ChessBoard.DRAW
+        else:
+            self.state = ChessBoard.NOTHING
 
     def change_turn(self):
         if self.turn == Piece.WHITE:
@@ -158,11 +163,32 @@ class ChessBoard:
             self.update_state()
             self.change_turn()
 
+<<<<<<< HEAD
     def random_play(self):
         while True:
             pass
 
 
+=======
+    @staticmethod
+    def get_random_chessboard():
+        rboard = None
+        while True:
+            rboard = ChessBoard()
+            all_added = rboard.add_piece(King(random.randint(0,7), random.randint(0,7), Piece.BLACK))
+            all_added = rboard.add_piece(King(random.randint(0,7), random.randint(0,7), Piece.WHITE))
+            all_added = rboard.add_piece(Rook(random.randint(0,7), random.randint(0,7), Piece.WHITE))
+            if all_added:
+                rboard.update_state()
+                if rboard.state is not ChessBoard.BLACK_KING_CHECKMATE:
+                    break
+        return rboard
+
+
+
+# End of class ------
+
+>>>>>>> d06809bbafb696fff4c3203e1937e07b5b595208
 def receiveCommand(msg):
     line  = raw_input(msg)
     while ( len(line) is not 3) or (line[0]  not in 'KkrR') or is_number(line[1]) is 0 or is_number(line[2]) is 0:
@@ -182,13 +208,13 @@ if __name__ == '__main__':
     # White plays first
     board = ChessBoard(Piece.WHITE)
 
-    wr = Rook(5,2,Piece.WHITE)
-    bk = King(2,5,Piece.BLACK)
-    wk = King(4,6,Piece.WHITE)
+    rw = Rook(1,2,Piece.WHITE)
+    kb = King(2,5,Piece.BLACK)
+    kw = King(4,6,Piece.WHITE)
 
-    board.add_piece(wr)
-    board.add_piece(wk)
-    board.add_piece(bk)
+    board.add_piece(rw)
+    board.add_piece(kb)
+    board.add_piece(kw)
     
     board.manual_play()
 

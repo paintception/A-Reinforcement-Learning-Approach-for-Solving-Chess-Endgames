@@ -40,6 +40,9 @@ class Piece(object):
     def restricted_positions(self):
         return []
 
+    def possible_moves(self):
+        return []
+
 
 class King(Piece):
 
@@ -52,20 +55,24 @@ class King(Piece):
             return False
 
     def restricted_positions(self):
-        pos = []
-        pos.append((self.row, self.col))
-        pos.append((self.row+1, self.col-1))
-        pos.append((self.row+1, self.col))
-        pos.append((self.row+1, self.col+1))
+        return self.possible_moves()
 
-        pos.append((self.row-1, self.col-1))
-        pos.append((self.row-1, self.col))
-        pos.append((self.row-1, self.col+1))
-
-        pos.append((self.row, self.col-1))
-        pos.append((self.row, self.col+1))
-
-        return pos
+    def possible_moves(self):
+        rows = []
+        cols = []
+        if self.row + 1 < 7:
+            rows.append(self.row+1)
+        if self.row - 1 > 0:
+            rows.append(self.row-1)
+        if self.col + 1 < 7:
+            cols.append(self.col+1)
+        if self.col - 1 > 0:
+            cols.append(self.col-1)
+        rows.append(self.row)
+        cols.append(self.col)
+        moves = [(row, col) for row in rows for col in cols]
+        moves.remove((self.row, self.col))
+        return moves
 
 
 class Rook(Piece):
@@ -78,7 +85,7 @@ class Rook(Piece):
 
         return False
 
-    def restricted_positions(self):
+    def possible_moves(self):
         pos = []
         pos.append((self.row, self.col))
         for x in range(0,8):
@@ -88,15 +95,18 @@ class Rook(Piece):
                 pos.append((self.row, x))
         return pos
 
+    def restricted_positions(self):
+        return self.possible_moves()
+
 if __name__ == '__main__':
     print("King")
-    k = King(3,3)
-    print(k)
-    k.move(3,2)
-    print(k)
-    print("Rook")
-    r = Rook(3,3)
-    print(r)
-    r.move(3,7)
-    print(r)
+    k = King(3,3, Piece.WHITE)
+    print(k.possible_moves())
+    # k.move(3,2)
+    # print(k)
+    # print("Rook")
+    # r = Rook(3,3)
+    # print(r)
+    # r.move(3,7)
+    # print(r)
 

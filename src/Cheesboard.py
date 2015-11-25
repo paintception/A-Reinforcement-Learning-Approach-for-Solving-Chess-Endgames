@@ -115,6 +115,7 @@ class ChessBoard:
                     piece = p
                     break
             if piece is None:
+                print "PIECE IS NONE"
                 return False 
         else:
             piece = realPiece
@@ -128,13 +129,20 @@ class ChessBoard:
                             raise Exception('Not allowed')
                         elif type(p) is Rook and (row,col) == (p.row,p.col):
                             self.pieces.remove(p)
-                             
+            elif type(piece) is Rook:
+                print "IN ROOK"
+                if not piece.checkMoveValidity(self.get_wking, row, col):
+                    print "in check move val"
+                    raise Exception("fucked up")
+
+
+
             o_row,o_col = piece.row, piece.col
             piece.move(row,col)
             
        #     print '(%d,%d) -> (%d,%d) OK' % (o_row,o_col,row,col)
         except:
-        #    print '(%d,%d) -> (%d,%d) INVALID' % (piece.row,piece.col,row,col) 
+            print '(%d,%d) -> (%d,%d) INVALID' % (piece.row,piece.col,row,col) 
             return False
 
         return True 

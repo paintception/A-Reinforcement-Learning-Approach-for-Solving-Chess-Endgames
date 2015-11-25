@@ -14,10 +14,14 @@ class Window:
 		self.BROWN = (148, 37, 0)
 		self.LGREY = (168, 168, 168)
 
+		self.isHighLighted = False
+		self.mouse = None
+
 		pygame.init()
 		size = [1200, 800]
 		self.screen = pygame.display.set_mode(size)
 		self.clock = pygame.time.Clock()
+		self.myfont = pygame.font.SysFont("monospace", 15)
 
 		self.loadImages()
 		self.gameloop()
@@ -40,7 +44,6 @@ class Window:
 			for j in range(8):
 				if j % 2 == mod:
 					pygame.draw.rect(self.screen, self.LGREY, [x, y, gap, gap])
-					pass
 				else:
 					pygame.draw.rect(self.screen, self.BROWN, [x, y, gap, gap])
 				x += gap
@@ -48,6 +51,9 @@ class Window:
 			x = 25
 			if mod == 0: mod = 1
 			else: mod = 0
+
+		if self.isHighLighted:
+			pygame.draw.rect(self.screen, pygame.Color(255, 0, 255, 127), [(self.mouse[0]*90)+25, (self.mouse[1]*90)+25, gap, gap])
 
 
 	def drawPieces(self):
@@ -75,21 +81,56 @@ class Window:
 		tmpImg = pygame.image.load("wrook.gif")
 		self.wRookImg = pygame.transform.scale(tmpImg, (scaleFactor,scaleFactor))
 
+
+	def drawText(self):
+		# render text
+		for i in range(8):
+			y = 10
+			x = (i*90)+65
+			self.screen.blit(self.myfont.render(str(i), 1, (0,0,0)), (x, y))
+
+		for i in range(8):
+			y = (i*90)+65
+			x = 10
+			self.screen.blit(self.myfont.render(str(i), 1, (0,0,0)), (x, y))
+
+
 	def gameloop(self):
 	    while True:
 			for event in pygame.event.get(): # User did something
 				if event.type == pygame.QUIT: # If user clicked close
-					sys.exit()
+					pygame.quit()
+					quit()
+				if event.type == pygame.MOUSEBUTTONDOWN:
 
-			self.clock.tick(1)
+					if event.button == 1:
+						mousePos = pygame.mouse.get_pos()
+						col = ((mousePos[1]-25)/90) 
+						row = ((mousePos[0]-25)/90) 
+						piece = None
+						for p in self.board.pieces:
+							if p.row == row and p.col == col:
+								piece = p
+								break
+
+						if piece == None:
+							self.isHighLighted = False
+							continue
+						self.isHighLighted = True
+						self.mouse = (row,col)
+						print piece
+
+						#(row,col)
+
+
+			self.clock.tick(60)
 
 			self.screen.fill(self.WHITE)
 			self.drawBoard()
 			self.drawPieces()
+			self.drawText()
 
 			pygame.display.flip()
-
-			#self.samlpeMove()
 
 if __name__ == '__main__':
 		board = ChessBoard.get_random_chessboard() 

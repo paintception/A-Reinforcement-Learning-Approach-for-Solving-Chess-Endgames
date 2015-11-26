@@ -14,10 +14,10 @@ class Piece(object):
         self.color = color
 
     def __str__(self):
-        return "%s(row - %d, col - %d)" %("W" if self.color==self.WHITE else "B", self.row, self.col)
+        return "%s(row - %d, col - %d)" %("W" if self.color==self.WHITE else "B", self.col, self.row)
 
     def __unicode__(self):
-        return "%s(row - %d, col - %d)" %("W" if self.color==self.WHITE else "B", self.row, self.col)
+        return "%s(row - %d, col - %d)" %("W" if self.color==self.WHITE else "B", self.col, self.row)
 
     def move(self, d_row, d_col):
         if self.check_borders(d_row, d_col) and self.check_pos(d_row, d_col):
@@ -96,6 +96,20 @@ class Rook(Piece):
 
     def restricted_positions(self):
         return self.possible_moves()
+
+    def checkMoveValidity(self, piece, row, col):
+        if col < piece.col and col < self.col and piece.row == self.row:
+            return False
+        elif row < piece.row and row < self.row and piece.col == self.col:
+            return False
+        elif col > piece.col and col > self.col and piece.row == self.row:
+            return False
+        elif row > piece.row and row > self.row and piece.col == self.col:
+            return False
+        return True
+
+
+
 
 if __name__ == '__main__':
     print("King")

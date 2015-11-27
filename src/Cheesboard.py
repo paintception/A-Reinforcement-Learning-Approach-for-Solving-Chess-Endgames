@@ -93,14 +93,13 @@ class ChessBoard:
             if self.turn is Piece.WHITE or (row,col) in res:
                 return False
         
-        o_row, o_col = piece.row, piece.col
+
         if piece.move(row,col):
             self.change_turn()
             self.update_state()
-            print('(%d,%d) -> (%d,%d)' % (o_row,o_col,row,col))
+
             return True
 
-        print('(%d,%d) -> (%d,%d) INVALID' % (o_row,o_col,row,col))
         return False
 
     def get_possible_moves(self):

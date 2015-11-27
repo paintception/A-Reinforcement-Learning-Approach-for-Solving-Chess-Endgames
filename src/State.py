@@ -13,14 +13,11 @@ class State:
     def __str__(self):
         return "[Round - %d, Points - %d]" %(self.get_round())
 
-    def __unicode__(self):
-        return "[Round - %d, Points - %d]" %(self.get_round())
 
     def get_next_states(self):
         boards = self.board.get_possible_moves()
         new_states = []
         for board in boards:
-            board.draw()
             new_states.append(State(board, 0, self))
 
         return new_states
@@ -36,13 +33,22 @@ class ParameterDC(State):
         self.p_set = self.get_parameters()
 
     def __str__(self):
-        return "(" + self.p_set(0) + "," + self.p_set(1) + ")"
+        return "(" + str(self.p_set[0]) + "," + str(self.p_set[1]) + ")"
+
+    def __repr__(self):
+        return "(" + str(self.p_set[0]) + "," + str(self.p_set[1]) + ")"
+
+
 
     def get_next_states(self):
         states = super(ParameterDC, self).get_next_states()
         pdcs = []
+        l = []
         for state in states:
-            pdcs.append(ParameterDC(state.board, state.points, self))
+            pd = ParameterDC(state.board, state.points, self)
+            if pd.__str__() not in l:
+                pdcs.append(pd)
+                l.append(pd.__str__())
 
         return pdcs
 

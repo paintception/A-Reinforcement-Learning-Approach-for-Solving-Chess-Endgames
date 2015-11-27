@@ -104,20 +104,22 @@ class ChessBoard:
         return False
 
     def get_possible_moves(self):
-        boards = []
+        pieces_to_play = []
         if self.turn == Piece.WHITE:
-            wking = self.get_w_king()
-            wrook = self.get_w_rook()
-            
-            moves_wking = wking.possible_moves()
-            moves_wrook = wrook.possible_moves()
-            board2 = copy.copy(self)
-        #    for move in moves_wking:
-
-                
+            pieces_to_play = [self.get_w_king(), self.get_w_rook()]
         else:
+            pieces_to_play = [self.get_b_king()]
 
-            pass
+        boards = []
+        for piece in pieces_to_play:
+            moves = piece.possible_moves()
+            for row,col in moves:
+                    new_board = copy.copy(self)
+                    if new_board.play_move(row, col, piece):
+                        boards.append(new_board)
+
+        return boards
+
     def update_state(self):
         kw = None
         kb = None
@@ -175,7 +177,6 @@ class ChessBoard:
         return rboard
 
     def draw(self):
-
         print 'State: ', self.state
         print 'Round:', self.round
         print 'Player:', "BLACK" if self.turn is Piece.BLACK else "WHITE"

@@ -41,8 +41,7 @@ class ChessBoard:
             return True
 
         return False
-
-    def draw(self):
+def draw(self):
 
         print 'State: ', self.state
         print 'Round:', self.round

@@ -3,6 +3,7 @@ __author__ = 'yaron'
 import sys
 from Pieces import King, Rook, Piece
 import random
+import copy
 
 class ChessBoard:
     NOTHING = 'PLAYING'
@@ -61,6 +62,62 @@ class ChessBoard:
                 return p
         return None
 
+    def play_move(self,row,col,piece):
+        w_king = self.get_w_king()
+        w_rook = self.get_w_rook()
+        b_king = self.get_b_king()
+        
+        if not piece.check_borders(row, col) or not piece.check_pos(row, col):
+            return False
+
+        if w_king is piece:
+            
+            res = b_king.restricted_positions()
+            res.append((w_rook.row, w_rook.col))
+            if self.turn is Piece.BLACK or (row,col) in res:
+                return False
+        
+        elif w_rook is piece:
+            if self.turn is Piece.BLACK or not piece.checkMoveValidity(w_king, row, col):
+                return False
+
+        elif b_king is piece:
+            res_wrook = set(w_rook.restricted_positions())
+            res_wking = set(w_king.restricted_positions())
+            res = res_wrook | res_wking
+            res.add((w_king.row, w_king.col))
+            
+            if w_rook.row is row and w_rook.col is col:
+                self.pieces.remove(w_rook)
+
+            if self.turn is Piece.WHITE or (row,col) in res:
+                return False
+        
+        o_row, o_col = piece.row, piece.col
+        if piece.move(row,col):
+            self.change_turn()
+            self.update_state()
+            print '(%d,%d) -> (%d,%d)' % (o_row,o_col,row,col)
+            return True
+
+        print '(%d,%d) -> (%d,%d) INVALID' % (o_row,o_col,row,col)
+        return False
+
+    def get_possible_moves(self):
+        boards = []
+        if self.turn == Piece.WHITE:
+            wking = self.get_w_king()
+            wrook = self.get_w_rook()
+            
+            moves_wking = wking.possible_moves()
+            moves_wrook = wrook.possible_moves()
+            board2 = copy.copy(self)
+        #    for move in moves_wking:
+
+                
+        else:
+
+            pass
     def update_state(self):
         kw = None
         kb = None
@@ -113,11 +170,65 @@ class ChessBoard:
             
             if all(all_added):
                 rboard.update_state()
-                if (rboard.state is not ChessBoard.BLACK_KING_CHECKMATE) and 
-                (rboard.state is not ChessBoard.BLACK_KING_CHECKED):
+                if (rboard.state is not ChessBoard.BLACK_KING_CHECKMATE) and (rboard.state is not ChessBoard.BLACK_KING_CHECKED):
                     break
         return rboard
 
+    def draw(self):
+
+        print 'State: ', self.state
+        print 'Round:', self.round
+        print 'Player:', "BLACK" if self.turn is Piece.BLACK else "WHITE"
+        sys.stdout.write('  ')
+        for k in range(0,8):
+            sys.stdout.write('  '+str(k)+' ')
+        sys.stdout.write('\n')
+
+        for row in range(0,8):
+
+            sys.stdout.write('  +')
+            for k in range(0,8):
+                sys.stdout.write('---+')
+            sys.stdout.write('\n')
+
+            if self.debug:
+                sys.stdout.write(str(row)+' ')
+            else:
+                sys.stdout.write(str(8-row)+' ')
+            for col in range(0,8):
+
+                check = 0
+                for p in self.pieces:
+                    if p.row == row and p.col == col:
+                        check = 1
+                        if type(p) is King:
+                            if p.color == Piece.BLACK: 
+                                sys.stdout.write('| K*')
+                            else:
+                                sys.stdout.write('| K ')
+
+                        if type(p) is Rook:
+                            if p.color == Piece.BLACK: 
+                                sys.stdout.write('| R*')
+                            else:
+                                sys.stdout.write('| R ')
+                if check is 0:
+                    sys.stdout.write('|   ')
+            
+            sys.stdout.write('|\n')
+    
+        sys.stdout.write('  +')
+        for k in range(0,8):
+            sys.stdout.write('---+')
+        sys.stdout.write('\n')
+
+        sys.stdout.write('  ')
+        for k in range(0,8):
+            if self.debug:
+                sys.stdout.write('  '+str(k)+' ')
+            else:
+                sys.stdout.write('  '+ chr(ord('a')+k)+' ')
+        sys.stdout.write('\n')
 # End of class ------
 
 if __name__ == '__main__':
@@ -125,9 +236,15 @@ if __name__ == '__main__':
     # White plays first
     board = ChessBoard(Piece.WHITE, debug= True)
 
-    board = ChessBoard.get_random_chessboard()
-    rw = Rook(1,2,Piece.WHITE)
-    kb = King(2,5,Piece.BLACK)
-    kw = King(4,6,Piece.WHITE)
- 
-    board.manual_play()
+    #board = ChessBoard.get_random_chessboard()
+    rw = Rook(7,0,Piece.WHITE)
+    kb = King(0,2,Piece.BLACK)
+    kw = King(2,2,Piece.WHITE)
+    board.add_piece(rw)
+    board.add_piece(kb)
+    board.add_piece(kw)
+    board.update_state()
+    board.draw()
+    
+    board.play_move(0,0,rw)
+    board.draw()

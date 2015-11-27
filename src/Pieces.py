@@ -23,9 +23,9 @@ class Piece(object):
         if self.check_borders(d_row, d_col) and self.check_pos(d_row, d_col):
             self.col = d_col
             self.row = d_row
-        else:
-            raise Exception("Wrong move")
-
+            return True
+        return False
+    
     def check_borders(self, d_row, d_col):
         if d_row < 0 or d_row > 7:
             return False
@@ -98,6 +98,8 @@ class Rook(Piece):
         return self.possible_moves()
 
     def checkMoveValidity(self, piece, row, col):
+        if row == piece.row and col == piece.col:
+            return False
         if col < piece.col and col < self.col and piece.row == self.row:
             return False
         elif row < piece.row and row < self.row and piece.col == self.col:

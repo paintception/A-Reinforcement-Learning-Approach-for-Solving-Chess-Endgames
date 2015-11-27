@@ -1,7 +1,7 @@
 import thread,time
 from Tkinter import *
 from Tkinter import Image
-from Cheesboard import ChessBoard
+from Cheesboard_old import ChessBoard
 import pygame
 
 class Window:

@@ -11,11 +11,13 @@ class Window:
 
 		self.BLACK = (  0,   0,   0)
 		self.WHITE = (255, 255, 255)
-		self.BROWN = (148, 37, 0)
+		self.BROWN = (128, 64, 0)
 		self.LGREY = (168, 168, 168)
+		self.YELLOW = (255, 215, 97)
 
 		self.isHighLighted = False
 		self.mouse = None
+		self.piece = None
 
 		pygame.init()
 		size = [1200, 800]
@@ -43,7 +45,7 @@ class Window:
 		for i in range(8):
 			for j in range(8):
 				if j % 2 == mod:
-					pygame.draw.rect(self.screen, self.LGREY, [x, y, gap, gap])
+					pygame.draw.rect(self.screen, self.YELLOW, [x, y, gap, gap])
 				else:
 					pygame.draw.rect(self.screen, self.BROWN, [x, y, gap, gap])
 				x += gap
@@ -53,7 +55,7 @@ class Window:
 			else: mod = 0
 
 		if self.isHighLighted:
-			pygame.draw.rect(self.screen, pygame.Color(255, 0, 255, 127), [(self.mouse[0]*90)+25, (self.mouse[1]*90)+25, gap, gap])
+			pygame.draw.rect(self.screen, pygame.Color(255, 0, 255, 20), [(self.mouse[0]*90)+25, (self.mouse[1]*90)+25, gap, gap])
 
 
 	def drawPieces(self):
@@ -107,20 +109,24 @@ class Window:
 						mousePos = pygame.mouse.get_pos()
 						col = ((mousePos[1]-25)/90) 
 						row = ((mousePos[0]-25)/90) 
-						piece = None
-						for p in self.board.pieces:
-							if p.row == row and p.col == col:
-								piece = p
-								break
+						
+						if self.isHighLighted:
+							mousePos = pygame.mouse.get_pos()
+							col = ((mousePos[1]-25)/90) 
+							row = ((mousePos[0]-25)/90)
+							print self.board.play_move(row, col, realPiece=self.piece)
 
-						if piece == None:
+							self.piece = None
 							self.isHighLighted = False
-							continue
-						self.isHighLighted = True
-						self.mouse = (row,col)
-						print piece
+						else:
+							for p in self.board.pieces:
+								if p.row == row and p.col == col:
+									self.isHighLighted = True
+									self.mouse = (row,col)
+									self.piece = p
+									break
 
-						#(row,col)
+						
 
 
 			self.clock.tick(60)

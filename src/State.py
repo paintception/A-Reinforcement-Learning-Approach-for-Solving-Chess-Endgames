@@ -20,9 +20,9 @@ class State:
         boards = self.board.get_possible_moves()
         new_states = []
         for board in boards:
-            board.draw()
-            new_states.append(State(board, self.points + 1, self))
+             new_states.append(State(board, self.points + 1, self))
 
+        print len(boards)
         return new_states
 
     def get_round(self):
@@ -30,5 +30,6 @@ class State:
 
 if __name__ == '__main__':
     board = ChessBoard.get_random_chessboard() 
+    board.draw()
     state = State(board, 0)
     state.get_next_states()

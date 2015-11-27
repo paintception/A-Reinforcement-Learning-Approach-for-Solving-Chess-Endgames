@@ -1,7 +1,7 @@
 import thread,time
 from Tkinter import *
 from Tkinter import Image
-from Cheesboard_old import ChessBoard
+from Cheesboard import ChessBoard
 import pygame
 
 class Window:
@@ -59,15 +59,16 @@ class Window:
 
 
 	def drawPieces(self):
-		p = self.board.get_wking()
+		p = self.board.get_w_king()
 		self.screen.blit(self.wKingImg, ((p.row*90)+30,(p.col*90)+30))
 
-		p = self.board.get_bking()
+		p = self.board.get_b_king()
 		self.screen.blit(self.bKingImg, ((p.row*90)+30,(p.col*90)+30))	
 
 
-		p = self.board.get_wrook()
-		self.screen.blit(self.wRookImg, ((p.row*90)+30,(p.col*90)+30))
+		p = self.board.get_w_rook()
+                if p is not None:
+                    self.screen.blit(self.wRookImg, ((p.row*90)+30,(p.col*90)+30))
 
 
 
@@ -114,7 +115,7 @@ class Window:
 							mousePos = pygame.mouse.get_pos()
 							col = ((mousePos[1]-25)/90) 
 							row = ((mousePos[0]-25)/90)
-							print self.board.play_move(row, col, realPiece=self.piece)
+							print self.board.play_move(row, col,self.piece)
 
 							self.piece = None
 							self.isHighLighted = False

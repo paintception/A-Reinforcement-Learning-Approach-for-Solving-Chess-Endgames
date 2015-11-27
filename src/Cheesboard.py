@@ -97,10 +97,8 @@ class ChessBoard:
         if piece.move(row,col):
             self.change_turn()
             self.update_state()
-            print '(%d,%d) -> (%d,%d)' % (o_row,o_col,row,col)
             return True
 
-        print '(%d,%d) -> (%d,%d) INVALID' % (o_row,o_col,row,col)
         return False
 
     def get_possible_moves(self):
@@ -111,14 +109,20 @@ class ChessBoard:
             pieces_to_play = [self.get_b_king()]
 
         boards = []
+
         for piece in pieces_to_play:
             moves = piece.possible_moves()
             for row,col in moves:
-                    new_board = copy.copy(self)
-                    if new_board.play_move(row, col, piece):
+                    new_board = copy.deepcopy(self)
+                    p = new_board.get_clone_piece(piece)
+                    if new_board.play_move(row, col, p):
                         boards.append(new_board)
-
         return boards
+
+    def get_clone_piece(self, piece):
+        for p in self.pieces:
+            if type(p) is type(piece) and p.color is piece.color:
+                return p
 
     def update_state(self):
         kw = None

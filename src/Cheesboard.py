@@ -97,10 +97,10 @@ class ChessBoard:
         if piece.move(row,col):
             self.change_turn()
             self.update_state()
-            print '(%d,%d) -> (%d,%d)' % (o_row,o_col,row,col)
+            print('(%d,%d) -> (%d,%d)' % (o_row,o_col,row,col))
             return True
 
-        print '(%d,%d) -> (%d,%d) INVALID' % (o_row,o_col,row,col)
+        print('(%d,%d) -> (%d,%d) INVALID' % (o_row,o_col,row,col))
         return False
 
     def get_possible_moves(self):
@@ -114,7 +114,7 @@ class ChessBoard:
         for piece in pieces_to_play:
             moves = piece.possible_moves()
             for row,col in moves:
-                    new_board = copy.copy(self)
+                    new_board = copy.deepcopy(self)
                     if new_board.play_move(row, col, piece):
                         boards.append(new_board)
 
@@ -177,9 +177,9 @@ class ChessBoard:
         return rboard
 
     def draw(self):
-        print 'State: ', self.state
-        print 'Round:', self.round
-        print 'Player:', "BLACK" if self.turn is Piece.BLACK else "WHITE"
+        print('State: ', self.state)
+        print('Round:', self.round)
+        print('Player:', "BLACK" if self.turn is Piece.BLACK else "WHITE")
         sys.stdout.write('  ')
         for k in range(0,8):
             sys.stdout.write('  '+str(k)+' ')

@@ -9,6 +9,7 @@ class ChessBoard:
     BLACK_KING_CHECKED = 'BLACK_KING_CHECKED'
     BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
     DRAW = 'DRAW'
+
     def __init__(self,turn=Piece.WHITE, debug=None):
         self.pieces = []
         self.num_pieces = 0
@@ -16,6 +17,7 @@ class ChessBoard:
         self.turn = turn
         self.state = ChessBoard.NOTHING
         self.debug = debug
+
     def is_valid_to_add(self,piece):
         """
         In case that the piece cannot be placed on the board
@@ -28,7 +30,6 @@ class ChessBoard:
 
             if type(piece) is King and type(p) is King and (piece.row, piece.col) in p.restricted_positions():
                 return False
-
         return True
 
     def add_piece(self, piece):
@@ -42,124 +43,19 @@ class ChessBoard:
 
         return False
 
-    def draw(self):
-
-        print 'State: ', self.state
-        print 'Round:', self.round
-
-        sys.stdout.write('  ')
-        for k in range(0,8):
-            sys.stdout.write('  '+str(k)+' ')
-        sys.stdout.write('\n')
-
-        for row in range(0,8):
-
-            sys.stdout.write('  +')
-            for k in range(0,8):
-                sys.stdout.write('---+')
-            sys.stdout.write('\n')
-
-            if self.debug:
-                sys.stdout.write(str(row)+' ')
-            else:
-                sys.stdout.write(str(8-row)+' ')
-            for col in range(0,8):
-
-                check = 0
-                for p in self.pieces:
-                    if p.row == row and p.col == col:
-                        check = 1
-                        if type(p) is King:
-                            if p.color == Piece.BLACK: 
-                                sys.stdout.write('| K*')
-                            else:
-                                sys.stdout.write('| K ')
-
-                        if type(p) is Rook:
-                            if p.color == Piece.BLACK: 
-                                sys.stdout.write('| R*')
-                            else:
-                                sys.stdout.write('| R ')
-                if check is 0:
-                    sys.stdout.write('|   ')
-            
-            sys.stdout.write('|\n')
-    
-        sys.stdout.write('  +')
-        for k in range(0,8):
-            sys.stdout.write('---+')
-        sys.stdout.write('\n')
-
-        sys.stdout.write('  ')
-        for k in range(0,8):
-            if self.debug:
-                sys.stdout.write('  '+str(k)+' ')
-            else:
-                sys.stdout.write('  '+ chr(ord('a')+k)+' ')
-        sys.stdout.write('\n')
-   
-    def play_move(self,row,col,typ=None,realPiece=None):
-        """
-        Returns 0 when the move is invalid.
-        """
-        typp = None
-        piece = None
-        if realPiece is None:
-            if typ in 'kK':
-                typp = King
-            elif typ in 'rR':
-                typp = Rook
-
-            for p in self.pieces:
-                if  type(p) is typp and p.color == self.turn:
-                    piece = p
-                    break
-            if piece is None:
-                print "PIECE IS NONE"
-                return False 
-        else:
-            piece = realPiece
-        try:
-
-            if type(piece) is King:
-                for p in self.pieces:
-                    # We don't care here about the same color pieces
-                    if p.color != piece.color:
-                        if (row,col) in p.restricted_positions():
-                            raise Exception('Not allowed')
-                        elif type(p) is Rook and (row,col) == (p.row,p.col):
-                            self.pieces.remove(p)
-            elif type(piece) is Rook:
-                print "IN ROOK"
-                if not piece.checkMoveValidity(self.get_wking, row, col):
-                    print "in check move val"
-                    raise Exception("fucked up")
-
-
-
-            o_row,o_col = piece.row, piece.col
-            piece.move(row,col)
-            
-       #     print '(%d,%d) -> (%d,%d) OK' % (o_row,o_col,row,col)
-        except:
-            print '(%d,%d) -> (%d,%d) INVALID' % (piece.row,piece.col,row,col) 
-            return False
-
-        return True 
-
-    def get_wking(self):
+    def get_w_king(self):
         for p in self.pieces:
             if type(p) is King and p.color is Piece.WHITE:
                 return p
         return None
 
-    def get_bking(self):
+    def get_b_king(self):
         for p in self.pieces:
             if type(p) is King and p.color is Piece.BLACK:
                 return p
         return None
 
-    def get_wrook(self):
+    def get_w_rook(self):
         for p in self.pieces:
             if type(p) is Rook and p.color is Piece.WHITE:
                 return p
@@ -205,24 +101,6 @@ class ChessBoard:
             return True
         return False
 
-    def manual_play(self):
-        while True:
-            self.draw()
-            p =  "WHITE" if self.turn==Piece.WHITE else "BLACK"
-            piece,row,col = receiveCommand('[' + p + ']Next move:')
-            while self.play_move(row,col,piece) is False:
-                piece,row,col = receiveCommand('[' + p +'] Play again:')
-            
-            self.update_state()
-
-            if self.is_finished(): 
-                self.draw()
-                return self.state
-
-            self.change_turn()
-            if( self.turn == Piece.WHITE):
-                self.round += 1
-
     @staticmethod
     def get_random_chessboard():
         rboard = None
@@ -235,29 +113,12 @@ class ChessBoard:
             
             if all(all_added):
                 rboard.update_state()
-                if rboard.state is not ChessBoard.BLACK_KING_CHECKMATE:
+                if (rboard.state is not ChessBoard.BLACK_KING_CHECKMATE) and 
+                (rboard.state is not ChessBoard.BLACK_KING_CHECKED):
                     break
-        if rboard.state == ChessBoard.BLACK_KING_CHECKED:
-            rboard.change_turn()
         return rboard
 
-
-
 # End of class ------
-
-def receiveCommand(msg):
-    line  = raw_input(msg)
-    while ( len(line) is not 3) or (line[0]  not in 'KkrR') or is_number(line[1]) is 0 or is_number(line[2]) is 0:
-        line = raw_input(msg)
-    row,col = int(line[1]), int(line[2])
-    return line[0],row,col
-
-def is_number(n):
-    try:
-        n = int(n)
-    except ValueError:
-        return 0
-    return 1
 
 if __name__ == '__main__':
     
@@ -268,11 +129,5 @@ if __name__ == '__main__':
     rw = Rook(1,2,Piece.WHITE)
     kb = King(2,5,Piece.BLACK)
     kw = King(4,6,Piece.WHITE)
-
-#    board.add_piece(rw)
-#    board.add_piece(kb)
-#    board.add_piece(kw)
-     
+ 
     board.manual_play()
-
-

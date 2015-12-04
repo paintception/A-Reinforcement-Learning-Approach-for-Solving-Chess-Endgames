@@ -1,6 +1,6 @@
 from Cheesboard import ChessBoard
 from Pieces import King, Rook, Piece
-
+import json
 
 class State:
 
@@ -16,6 +16,28 @@ class State:
         w_rook = self.board.get_w_rook()
         b_king = self.board.get_b_king()
         return "wk:(%d,%d),wr:(%d,%d),bk:(%d,%d)" % (w_king.row,w_king.col,w_rook.row,w_rook.col,b_king.row,b_king.col) 
+
+    def get_id(self):
+        w_king = self.board.get_w_king()
+        w_rook = self.board.get_w_rook()
+        b_king = self.board.get_b_king()
+        return "%d,%d,%d,%d,%d,%d" % (w_king.row,w_king.col,w_rook.row,w_rook.col,b_king.row,b_king.col) 
+
+    def get_json(self,next_states):
+        w_king = self.board.get_w_king()
+        w_rook = self.board.get_w_rook()
+        b_king = self.board.get_b_king()
+
+        y = []
+        for state in next_states:
+            w_king = state.board.get_w_king()
+            w_rook = state.board.get_w_rook()
+            b_king = state.board.get_b_king()
+
+            y.append( {'w_king' :  w_king.to_json() , 'w_rook' : w_rook.to_json() , 'b_king' : b_king.to_json()}) 
+       
+        x =  {'w_king' :  w_king.to_json() , 'w_rook' : w_rook.to_json() , 'b_king' : b_king.to_json(), 'next_states' : y} 
+        return json.dumps(x,indent=4)
 
     def get_next_states(self):
         boards = self.board.get_possible_moves()
@@ -75,11 +97,12 @@ class ParameterDC(State):
     def _get_dist(bk, wk):
         return abs(bk.row - wk.row) + abs(bk.col - wk.col)
 
+def save_to_file(filename,data):
+    with open(filename,'w') as outfile:
+        outfile.write(data)
 
 if __name__ == '__main__':
     board = ChessBoard.get_random_chessboard()
     s = State(board) 
     s.board.draw()
-    print (s)
-    for ss in  (s.get_next_states()):
-        print (ss)
+    print (s.get_id()) 

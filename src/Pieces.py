@@ -1,7 +1,8 @@
 __author__ = 'yaron'
 
+import json
 
-class Piece(object):
+class Piece():
 
     WHITE = 1
     BLACK = 0
@@ -18,6 +19,9 @@ class Piece(object):
 
     def __unicode__(self):
         return "%s(row - %d, col - %d)" %("W" if self.color==self.WHITE else "B", self.col, self.row)
+
+    def to_json(self):
+        return { 'row' : self.row , 'col' : self.col }
 
     def move(self, d_row, d_col):
         if self.check_borders(d_row, d_col) and self.check_pos(d_row, d_col):

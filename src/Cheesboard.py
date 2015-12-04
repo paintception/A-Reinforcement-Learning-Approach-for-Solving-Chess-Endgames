@@ -12,7 +12,7 @@ class ChessBoard:
     BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
     DRAW = 'DRAW'
 
-    def __init__(self,wk=None,wr=None,bk=None,debug=None):
+    def __init__(self, wk=None, wr=None, bk=None, debug=None):
         self.pieces = []
         self.num_pieces = 0
         self.round = 1
@@ -24,7 +24,6 @@ class ChessBoard:
         if(wk is None or wr is None or bk is None):
             return
 
-        print(type(wk))
         all_added = []
         all_added.append(self.add_piece(wk))
         all_added.append(self.add_piece(wr))
@@ -35,7 +34,7 @@ class ChessBoard:
         else:
             self.valid = False
 
-    def board_id():
+    def board_id(self):
         b_king = self.get_b_king()
         w_king = self.get_w_king()
         w_rook = self.get_w_rook()

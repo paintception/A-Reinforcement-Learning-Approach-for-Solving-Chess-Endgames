@@ -25,12 +25,12 @@ class BoardPossitionParams(BaseParams):
 
 	def get_all_params(self):
 		params = []
-		for bk_r in xrange(0,7):
-			for bk_c in xrange(0,7):
-				for wk_r in xrange(0,7):
-					for wk_c in xrange(0,7):
-						for wr_r in xrange(0,7):
-							for wr_c in xrange(0,7):
+		for bk_r in range(0,7):
+			for bk_c in range(0,7):
+				for wk_r in range(0,7):
+					for wk_c in range(0,7):
+						for wr_r in range(0,7):
+							for wr_c in range(0,7):
 								params.append((bk_r, bk_c, wk_r, wk_c, wr_r, wr_c))
 		return params
 
@@ -41,11 +41,10 @@ class BoardPossitionParams(BaseParams):
 		nxt_prms = {}
 		for bk_r, bk_c, wk_r, wk_c, wr_r, wr_c in params:
 			
-			board = ChessBoard((wk_r, wk_c), (wr_r, wr_c), (bk_r, bk_c))
+			board = ChessBoard(King(wk_r, wk_c, Piece.WHITE), Rook(wr_r, wr_c, Piece.WHITE), King(bk_r, bk_c, Piece.BLACK))
 			if not board.valid:
 				continue
 
-			board.draw()
 			nxt_pos = {}
 			for nxt_moves in board.get_possible_moves():
 				r = 0
@@ -56,6 +55,8 @@ class BoardPossitionParams(BaseParams):
 				nxt_pos[nxt_moves.board_id()] = (r, 0)
 
 			nxt_prms[board.board_id()] = nxt_pos
+
+		return nxt_prms
 		
 if __name__ == '__main__':
 	bp = BoardPossitionParams()

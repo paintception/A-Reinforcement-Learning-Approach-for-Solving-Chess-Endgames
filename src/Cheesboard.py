@@ -5,34 +5,43 @@ from Pieces import King, Rook, Piece
 import random
 import copy
 
+
 class ChessBoard:
     NOTHING = 'PLAYING'
     BLACK_KING_CHECKED = 'BLACK_KING_CHECKED'
     BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
     DRAW = 'DRAW'
 
-    def __init__(self,debug=None,wk=None,wr=None,bk=None):
+    def __init__(self,wk=None,wr=None,bk=None,debug=None):
         self.pieces = []
         self.num_pieces = 0
         self.round = 1
         self.turn = Piece.WHITE
         self.state = ChessBoard.NOTHING
         self.debug = debug
+        self.valid = True
 
-        if(wk is None and wr is None and bk is None):
+        if(wk is None or wr is None or bk is None):
             return
 
+        print(type(wk))
         all_added = []
-        all_added.append(self.add_piece(King(wk[0],wk[1],Piece.WHITE)))
-        all_added.append(self.add_piece(King(bk[0],bk[1],Piece.BLACK)))
-        all_added.append(self.add_piece(Rook(wr[0],wr[1],Piece.WHITE)))
+        all_added.append(self.add_piece(wk))
+        all_added.append(self.add_piece(wr))
+        all_added.append(self.add_piece(bk))
         
         if all(all_added):
             self.update_state()
-            if (self.state is  ChessBoard.BLACK_KING_CHECKMATE) or (self.state is  self.BLACK_KING_CHECKED):
-                raise Exception('Invalid Initialization')
         else:
-            raise Exception('Invalid Initialization')
+            self.valid = False
+
+    def board_id():
+        b_king = self.get_b_king()
+        w_king = self.get_w_king()
+        w_rook = self.get_w_rook()
+
+        return (b_king.row, b_king.col, w_king.row, w_king.col, w_rook.row, w_rook.col)
+        
 
     def is_valid_to_add(self,piece):
         """
@@ -249,17 +258,19 @@ class ChessBoard:
 if __name__ == '__main__':
     
     # White plays first
-    board = ChessBoard(Piece.WHITE, debug= True)
-
-    #board = ChessBoard.get_random_chessboard()
     rw = Rook(7,0,Piece.WHITE)
     kb = King(0,2,Piece.BLACK)
     kw = King(2,2,Piece.WHITE)
-    board.add_piece(rw)
-    board.add_piece(kb)
-    board.add_piece(kw)
-    board.update_state()
+    board = ChessBoard(Piece.WHITE, kw, rw, kb)
     board.draw()
+
+    # #board = ChessBoard.get_random_chessboard()
     
-    board.play_move(0,0,rw)
-    board.draw()
+    # board.add_piece(rw)
+    # board.add_piece(kb)
+    # board.add_piece(kw)
+    # board.update_state()
+    # board.draw()
+    
+    # board.play_move(0,0,rw)
+    # board.draw()

@@ -11,13 +11,28 @@ class ChessBoard:
     BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
     DRAW = 'DRAW'
 
-    def __init__(self,turn=Piece.WHITE, debug=None):
+    def __init__(self,debug=None,wk=None,wr=None,bk=None):
         self.pieces = []
         self.num_pieces = 0
         self.round = 1
-        self.turn = turn
+        self.turn = Piece.WHITE
         self.state = ChessBoard.NOTHING
         self.debug = debug
+
+        if(wk is None and wr is None and bk is None):
+            return
+
+        all_added = []
+        all_added.append(self.add_piece(King(wk[0],wk[1],Piece.WHITE)))
+        all_added.append(self.add_piece(King(bk[0],bk[1],Piece.BLACK)))
+        all_added.append(self.add_piece(Rook(wr[0],wr[1],Piece.WHITE)))
+        
+        if all(all_added):
+            self.update_state()
+            if (self.state is  ChessBoard.BLACK_KING_CHECKMATE) or (self.state is  self.BLACK_KING_CHECKED):
+                raise Exception('Invalid Initialization')
+        else:
+            raise Exception('Invalid Initialization')
 
     def is_valid_to_add(self,piece):
         """

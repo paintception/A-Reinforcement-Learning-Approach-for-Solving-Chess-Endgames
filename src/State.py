@@ -10,17 +10,21 @@ class State:
         self.next_state = []
         self.prev_state = prev_state
 
-    def __str__(self):
-        return "[Round - %d, Points - %d]" %(self.get_round())
 
+    def __repr__(self):
+        w_king = self.board.get_w_king()
+        w_rook = self.board.get_w_rook()
+        b_king = self.board.get_b_king()
+        return "wk:(%d,%d),wr:(%d,%d),bk:(%d,%d)" % (w_king.row,w_king.col,w_rook.row,w_rook.col,b_king.row,b_king.col) 
 
     def get_next_states(self):
         boards = self.board.get_possible_moves()
         new_states = []
         for board in boards:
             new_states.append(State(board, 0, self))
-
-        return new_states
+    
+        
+        return new_states[1:]
 
     def get_round(self):
         return self.board.round
@@ -74,6 +78,8 @@ class ParameterDC(State):
 
 if __name__ == '__main__':
     board = ChessBoard.get_random_chessboard()
-    board.draw()
-    state = ParameterDC(board, 0)
-    print(state.p_set)
+    s = State(board) 
+    s.board.draw()
+    print (s)
+    for ss in  (s.get_next_states()):
+        print (ss)

@@ -261,7 +261,7 @@ if __name__ == '__main__':
     rw = Rook(7,0,Piece.WHITE)
     kb = King(0,2,Piece.BLACK)
     kw = King(2,2,Piece.WHITE)
-    board = ChessBoard(Piece.WHITE, kw, rw, kb)
+    board = ChessBoard(kw, rw, kb)
     board.draw()
 
     # #board = ChessBoard.get_random_chessboard()

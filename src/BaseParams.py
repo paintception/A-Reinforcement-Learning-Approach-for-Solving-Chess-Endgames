@@ -55,6 +55,8 @@ class BoardPossitionParams(BaseParams):
 				nxt_pos[nxt_moves.board_id()] = (r, 0)
 
 			nxt_prms[board.board_id()] = nxt_pos
+
+		return nxt_prms
 		
 if __name__ == '__main__':
 	bp = BoardPossitionParams()

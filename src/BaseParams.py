@@ -71,8 +71,8 @@ class BoardPossitionParams(BaseParams):
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
-    p = bp.get_possible_nxt_prms()
-    bp.save(p, "burger.bson")
+    #p = bp.get_possible_nxt_prms()
+    #bp.save(p, "burger.bson")
     op = bp.load("burger.bson")
-    print(op)
-    
+    print(type(op))
+    print(len(op)) 

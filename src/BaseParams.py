@@ -26,13 +26,13 @@ class BoardPossitionParams(BaseParams):
 
     def get_all_params(self):
         params = []
-        for bk_r in range(0,8):
-            for bk_c in range(0,8):
-                for wk_r in range(0,8):
-                    for wk_c in range(0,8):
-                        for wr_r in range(0,8):
-                            for wr_c in range(0,8):
-                                params.append((bk_r, bk_c, wk_r, wk_c, wr_r, wr_c))
+        for wk_r in range(0,8):
+            for wk_c in range(0,8):
+                for wr_r in range(0,8):
+                    for wr_c in range(0,8):
+                        for bk_r in range(0,8):
+                            for bk_c in range(0,8):
+                                params.append((wk_r, wk_c, wr_r, wr_c, bk_r, bk_c))
         return params
 
     def get_possible_nxt_prms(self, params=None):
@@ -40,7 +40,7 @@ class BoardPossitionParams(BaseParams):
             params = self.get_all_params()
 
         nxt_prms = {}
-        for bk_r, bk_c, wk_r, wk_c, wr_r, wr_c in params:
+        for wk_r, wk_c, wr_r, wr_c, bk_r, bk_c in params:
 
             board = ChessBoard(King(wk_r, wk_c, Piece.WHITE), Rook(wr_r, wr_c, Piece.WHITE), King(bk_r, bk_c, Piece.BLACK))
             if not board.valid:
@@ -71,8 +71,10 @@ class BoardPossitionParams(BaseParams):
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
-    #p = bp.get_possible_nxt_prms()
-    #bp.save(p, "burger.bson")
+    # p = bp.get_possible_nxt_prms()
+    # bp.save(p, "burger.bson")
     op = bp.load("burger.bson")
+    print(len(list(op.keys())))
+    print(op[(5, 5, 0, 1, 6, 1)])
     print(type(op))
     print(len(op)) 

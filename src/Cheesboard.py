@@ -39,7 +39,7 @@ class ChessBoard:
         w_king = self.get_w_king()
         w_rook = self.get_w_rook()
 
-        return (b_king.row, b_king.col, w_king.row, w_king.col, w_rook.row, w_rook.col)
+        return (w_king.row, w_king.col, w_rook.row, w_rook.col, b_king.row, b_king.col)
         
 
     def is_valid_to_add(self,piece):

@@ -39,6 +39,7 @@ class BoardPossitionParams(BaseParams):
         if params is None:
             params = self.get_all_params()
 
+        count = 0
         nxt_prms = {}
         for wk_r, wk_c, wr_r, wr_c, bk_r, bk_c in params:
 
@@ -56,7 +57,14 @@ class BoardPossitionParams(BaseParams):
                 nxt_pos[nxt_moves.board_id()] = (r, 0)
 
             nxt_prms[board.board_id()] = nxt_pos
+            # if board.board_id() not in nxt_prms.keys():
+            #     print("res")
+            #     print(count)
+            #     print(len(nxt_prms))
+            #     print(board.board_id())
+            count += 1
 
+        print(count)
         return nxt_prms
 
     def save(self, parms, filename):
@@ -71,10 +79,18 @@ class BoardPossitionParams(BaseParams):
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
+    # ap = bp.get_all_params()
+    # print(len(ap))
+    # # (7, 6, 4, 3, 1, 0)
+    # print(ap[100] in ap)
+    # print(ap[100])
     # p = bp.get_possible_nxt_prms()
-    # bp.save(p, "burger.bson")
-    op = bp.load("burger.bson")
-    print(len(list(op.keys())))
-    print(op[(5, 5, 0, 1, 6, 1)])
-    print(type(op))
-    print(len(op)) 
+    # print(len(p))
+    # print(ap[100] in p.keys())
+    # bp.save(p, "burgerID.bson")
+    op = bp.load("burgerID.bson")
+    print(len(op))
+    # print(len(op))
+    # print(op[(7, 5, 3, 5, 5, 2)])
+    # print(type(op))
+    # print(len(op))

@@ -69,19 +69,19 @@ class ChessBoard:
 
     def get_w_king(self):
         for p in self.pieces:
-            if type(p) is King and p.color is Piece.WHITE:
+            if type(p) is King and p.color == Piece.WHITE:
                 return p
         return None
 
     def get_b_king(self):
         for p in self.pieces:
-            if type(p) is King and p.color is Piece.BLACK:
+            if type(p) is King and p.color == Piece.BLACK:
                 return p
         return None
 
     def get_w_rook(self):
         for p in self.pieces:
-            if type(p) is Rook and p.color is Piece.WHITE:
+            if type(p) is Rook and p.color == Piece.WHITE:
                 return p
         return None
 

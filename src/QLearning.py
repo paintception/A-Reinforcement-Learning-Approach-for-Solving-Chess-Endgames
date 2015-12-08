@@ -46,7 +46,7 @@ if __name__ == '__main__':
     bp = BoardPossitionParams()
     q = QLearning(bp)
     print("start")
-    q.learning(1000000000000)
+    q.learning(100)
     print("save")
     q.params.save(q.all_params, "burger5000.bson")
 

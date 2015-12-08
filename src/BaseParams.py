@@ -1,6 +1,6 @@
 from Cheesboard import ChessBoard
 from Pieces import King, Rook, Piece
-import json
+import pickle
 
 
 class BaseParams:
@@ -59,8 +59,20 @@ class BoardPossitionParams(BaseParams):
 
         return nxt_prms
 
+    def save(self, parms, filename):
+        to_save_parms = {}
+        with open(filename, 'wb') as outfile:
+            pickle.dump(parms, outfile, pickle.HIGHEST_PROTOCOL)
+
+    def load(self, filename):
+        with open(filename, 'rb') as infile:
+            params = pickle.load(infile)
+            return params
+
 if __name__ == '__main__':
     bp = BoardPossitionParams()
     p = bp.get_possible_nxt_prms()
-    with open("g.json", 'w') as outfile:
-        data = json.dump(p, outfile)
+    bp.save(p, "burger.bson")
+    op = bp.load("burger.bson")
+    print(op)
+    

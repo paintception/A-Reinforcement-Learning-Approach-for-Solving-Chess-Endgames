@@ -1,7 +1,9 @@
 from State import State
 from Cheesboard import ChessBoard
 from random import randint
-import ramdom
+import random
+from BaseParams import BoardPossitionParams
+
 
 class QLearning:
 
@@ -18,7 +20,7 @@ class QLearning:
             current_state = self.R[current_state_id]
             rnd_action_id = random.choice(current_state.keys())
             rnd_action = current_state[rnd_action_id]
-            if selct_rnd_action[1] != -2:
+            if rnd_action[1] != -2:
                 self.cal_learning_step(current_state_id, rnd_action_id)
             epochs -= 1
 
@@ -34,6 +36,7 @@ class QLearning:
         
 if __name__ == '__main__':
 
-    q = QLearning()
+    bp = BoardPossitionParams()
+    q = QLearning(bp)
+    q.learning(10)
 
-    board = ChessBoard.get_random_chessboard()

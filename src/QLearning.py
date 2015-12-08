@@ -15,8 +15,7 @@ class QLearning:
 
     def learning(self, epochs):
         while epochs > 0:
-            rnd_num = randint(0,len(self.all_params))
-            current_state_id = self.all_params[rnd_num]
+            current_state_id = random.choice(self.all_params.keys())
             current_state = self.R[current_state_id]
             rnd_action_id = random.choice(current_state.keys())
             rnd_action = current_state[rnd_action_id]

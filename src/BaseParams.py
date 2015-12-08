@@ -26,12 +26,12 @@ class BoardPossitionParams(BaseParams):
 
     def get_all_params(self):
         params = []
-        for bk_r in range(0,7):
-            for bk_c in range(0,7):
-                for wk_r in range(0,7):
-                    for wk_c in range(0,7):
-                        for wr_r in range(0,7):
-                            for wr_c in range(0,7):
+        for bk_r in range(0,8):
+            for bk_c in range(0,8):
+                for wk_r in range(0,8):
+                    for wk_c in range(0,8):
+                        for wr_r in range(0,8):
+                            for wr_c in range(0,8):
                                 params.append((bk_r, bk_c, wk_r, wk_c, wr_r, wr_c))
         return params
 

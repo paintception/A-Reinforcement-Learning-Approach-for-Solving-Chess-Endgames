@@ -38,5 +38,5 @@ if __name__ == '__main__':
 
     bp = BoardPossitionParams()
     q = QLearning(bp)
-    bp.learning(10)
+    q.learning(10)
 

@@ -1,6 +1,7 @@
 from State import State
 from Cheesboard import ChessBoard
 from random import randint
+from Pieces import King, Rook, Piece
 import random
 from BaseParams import BoardPossitionParams
 
@@ -15,14 +16,38 @@ class QLearning:
 
     def learning(self, epochs):
         current_state_id = random.choice(self.all_params)
+        #current_state_id = self.all_params[0]
+
         while epochs > 0:
-            current_state = self.R[current_state_id]
-            rnd_action_id = random.choice(list(current_state.keys()))
+
+            print(current_state_id)
+
+            possible_states = self.R[current_state_id]
+
+            if not possible_states :
+                wk_r, wk_c, wr_r, wr_c, bk_r, bk_c = current_state_id
+                board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
+                               wr=Rook(wr_r, wr_c, Piece.WHITE),
+                               bk=King(bk_r, bk_c, Piece.BLACK))
+                print('State: ', board.state)
+                epochs -= 1
+                current_state_id = random.choice(self.all_params)
+                continue
+
+            rnd_action_id = random.choice(list(possible_states.keys()))
+            #rnd_action_id = list(possible_states.keys())[0]
+
+
 
             res = self.cal_learning_step(current_state_id, rnd_action_id)
             if res is None:
-                epochs -= 1
 
+                wk_r, wk_c, wr_r, wr_c, bk_r, bk_c = current_state_id
+                board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
+                               wr=Rook(wr_r, wr_c, Piece.WHITE),
+                               bk=King(bk_r, bk_c, Piece.BLACK))
+                print('State: ', board.state)
+                epochs -= 1
                 current_state_id = random.choice(self.all_params)
             else:
                 current_state_id = res
@@ -30,13 +55,14 @@ class QLearning:
     def cal_learning_step(self, state, action):
         mx = 0
         non_zero = False
-        print (action)
-        print (self.R[action])
-        for action in self.R[action]:
-            if action[1] != 0:
+
+        poss_actions = self.R[action]
+
+        for a in poss_actions:
+            if poss_actions[a][1] != 0:
                 non_zero = True
-            if action[0] > mx:
-                mx = action[0]
+            if poss_actions[a][0] >= mx:
+                mx = poss_actions[a][0]
 
         if non_zero:
             r = self.R[state][action][0]
@@ -50,12 +76,11 @@ if __name__ == '__main__':
     bp = BoardPossitionParams()
     q = QLearning(bp,'res/final.bson')
 
-    for x in q.R.keys():
-        print (len(q.R[x]))
+    #for x in q.R.keys():
+    #    print (len(q.R[x]))
     print("start")
 
-
-    #q.learning(1)
+    q.learning(100)
     print("save")
-    q.params.save(q.all_params, "res/final1.bson")
+    q.params.save(q.all_params, "res/final100.bson")
 

@@ -79,12 +79,14 @@ class BoardPossitionParams(BaseParams):
             return params
 
 if __name__ == '__main__':
+
     bp = BoardPossitionParams()
-    x = bp.get_possible_nxt_prms()
-    bp.save(x,'final_test.bson')
+    par = bp.get_possible_nxt_prms()
+    bp.save(par,'res/final.bson')
+
 
     """
-    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c = 0,0,0,1,0,2
+    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c = 7, 3, 3, 2, 1, 2
     board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
                                wr=Rook(wr_r, wr_c, Piece.WHITE),
                                bk=King(bk_r, bk_c, Piece.BLACK),debug=True)
@@ -96,4 +98,3 @@ if __name__ == '__main__':
     for ps in next_poss:
         print (ps.board_id())
     """
-

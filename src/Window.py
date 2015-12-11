@@ -2,6 +2,7 @@ import thread,time
 from Tkinter import *
 from Tkinter import Image
 from Cheesboard import ChessBoard
+from Pieces import King,Rook, Piece
 import pygame
 
 class Window:
@@ -60,10 +61,13 @@ class Window:
 
 	def drawPieces(self):
 		p = self.board.get_w_king()
-		self.screen.blit(self.wKingImg, ((p.row*90)+30,(p.col*90)+30))
+                print p
+                if p is not None:
+                    self.screen.blit(self.wKingImg, ((p.row*90)+30,(p.col*90)+30))
 
-		p = self.board.get_b_king()
-		self.screen.blit(self.bKingImg, ((p.row*90)+30,(p.col*90)+30))	
+                p = self.board.get_b_king()
+                if p is not None:
+                    self.screen.blit(self.bKingImg, ((p.row*90)+30,(p.col*90)+30))	
 
 
 		p = self.board.get_w_rook()
@@ -140,6 +144,6 @@ class Window:
 			pygame.display.flip()
 
 if __name__ == '__main__':
-		board = ChessBoard.get_random_chessboard() 
-
-		w = Window(board)
+        board = ChessBoard(wk=King(0,0,Piece.WHITE) , wr=Rook(0,1,Piece.WHITE) , bk=King(1,2,Piece.BLACK) ) 
+        board.draw()
+        w = Window(board)

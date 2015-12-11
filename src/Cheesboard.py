@@ -33,8 +33,8 @@ class ChessBoard:
         else:
             self.valid = False
 
-        if self.state == ChessBoard.BLACK_KING_CHECKED:
-            self.valid = False
+        #if self.state == ChessBoard.BLACK_KING_CHECKED:
+        #    self.valid = False
 
 
     def board_id(self):
@@ -108,7 +108,7 @@ class ChessBoard:
                 return False
 
         elif b_king is piece:
-            res_wrook = set(w_rook.restricted_positions())
+            res_wrook = set(w_rook.restricted_positions(w_king))
             res_wking = set(w_king.restricted_positions())
             res = res_wrook | res_wking
             res.add((w_king.row, w_king.col))
@@ -190,6 +190,7 @@ class ChessBoard:
             self.state = ChessBoard.BLACK_KING_CHECKMATE
         elif checked:
             self.state = ChessBoard.BLACK_KING_CHECKED
+            self.turn = Piece.BLACK
         elif not checked and (set(kb.possible_moves())).issubset(restr):
             self.state = ChessBoard.DRAW
         else:
@@ -291,7 +292,7 @@ if __name__ == '__main__':
     print (board.board_id())
     board.draw()
 
-    # #board = ChessBoard.get_random_chessboard()
+    board = ChessBoard.get_random_chessboard()
     
     # board.add_piece(rw)
     # board.add_piece(kb)

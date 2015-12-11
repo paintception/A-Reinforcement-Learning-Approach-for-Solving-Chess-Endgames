@@ -1,5 +1,4 @@
 
-__author__ = 'yaron'
 import sys
 from Pieces import King, Rook, Piece
 import random

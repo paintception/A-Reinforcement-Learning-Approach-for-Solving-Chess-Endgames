@@ -43,7 +43,9 @@ class BoardPossitionParams(BaseParams):
         nxt_prms = {}
         for wk_r, wk_c, wr_r, wr_c, bk_r, bk_c in params:
 
-            board = ChessBoard(King(wk_r, wk_c, Piece.WHITE), Rook(wr_r, wr_c, Piece.WHITE), King(bk_r, bk_c, Piece.BLACK))
+            board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
+                               wr=Rook(wr_r, wr_c, Piece.WHITE),
+                               bk=King(bk_r, bk_c, Piece.BLACK))
             if not board.valid:
                 continue
 
@@ -56,7 +58,7 @@ class BoardPossitionParams(BaseParams):
                     r = -100
                 nxt_pos[nxt_moves.board_id()] = (r, 0)
 
-            nxt_pos.pop((wk_r,wk_c,wr_r,wr_c,bk_r,bk_c))
+
 
             nxt_prms[(wk_r,wk_c,wr_r,wr_c,bk_r,bk_c)] = nxt_pos
             # if board.board_id() not in nxt_prms.keys():
@@ -85,3 +87,18 @@ if __name__ == '__main__':
     x = bp.get_possible_nxt_prms()
 
     bp.save(x,'final.bson')
+
+    """
+    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c = 4,1, 2,3, 3,5
+    board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
+                               wr=Rook(wr_r, wr_c, Piece.WHITE),
+                               bk=King(bk_r, bk_c, Piece.BLACK),debug=True)
+    board.draw()
+    next_poss = board.get_possible_moves()
+
+    print (len(next_poss))
+    for ps in next_poss:
+        print (ps.board_id())
+    """
+
+

@@ -101,7 +101,7 @@ class ChessBoard:
                 return False
         
         elif w_rook is piece:
-            if self.turn is Piece.BLACK or not piece.checkMoveValidity(w_king, row, col):
+            if self.turn is Piece.BLACK or  not piece.checkMoveValidity(w_king, row, col):
                 return False
 
         elif b_king is piece:
@@ -133,11 +133,31 @@ class ChessBoard:
             pieces_to_play = [self.get_b_king()]
 
         boards = []
+        piece_num = 0
         for piece in pieces_to_play:
-            moves = piece.possible_moves()
+
+            moves = []
+            if type(piece) is Rook:
+                piece_num = 1
+                moves = piece.possible_moves(self.get_w_king())
+            else:
+                if Piece.BLACK == piece.color:
+                    piece_num = 2
+                else:
+                    piece_num = 0
+                moves = piece.possible_moves()
+
             for row,col in moves:
                     new_board = copy.deepcopy(self)
-                    if new_board.play_move(row, col, piece):
+                    clone_piece = None
+                    if piece_num is 0:
+                        clone_piece = new_board.get_w_king()
+                    elif piece_num is 1:
+                        clone_piece = new_board.get_w_rook()
+                    else:
+                        clone_piece = new_board.get_b_king()
+
+                    if new_board.play_move(row, col, clone_piece):
                         boards.append(new_board)
 
         return boards
@@ -158,9 +178,9 @@ class ChessBoard:
             self.state = ChessBoard.DRAW
             return 
 
-        restr = (set(kw.possible_moves()) | set(rw.possible_moves()))
+        restr = (set(kw.possible_moves()) | set(rw.possible_moves(kw)))
 
-        checked = (kb.row,kb.col) in rw.restricted_positions()
+        checked = (kb.row,kb.col) in rw.restricted_positions(kw)
 
         if checked and set(kb.possible_moves()).issubset(restr):
             self.state = ChessBoard.BLACK_KING_CHECKMATE
@@ -257,10 +277,14 @@ class ChessBoard:
 if __name__ == '__main__':
     
     # White plays first
-    rw = Rook(7,0,Piece.WHITE)
+    rw = Rook(0,1,Piece.WHITE)
     kb = King(0,2,Piece.BLACK)
     kw = King(2,2,Piece.WHITE)
-    board = ChessBoard(kw, rw, kb)
+    board = ChessBoard(kw, rw, kb,debug=True)
+    print (board.board_id())
+
+    print (board.play_move(0,0,board.get_b_king()))
+    print (board.board_id())
     board.draw()
 
     # #board = ChessBoard.get_random_chessboard()

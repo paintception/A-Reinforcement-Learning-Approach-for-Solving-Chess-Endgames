@@ -7,10 +7,10 @@ from BaseParams import BoardPossitionParams
 
 class QLearning:
 
-    def __init__(self,params):
+    def __init__(self,params,name):
         self.params = params
         self.gamma = 0.5
-        self.R = self.params.load("burger.bson")
+        self.R = self.params.load(name)
         self.all_params = list(self.R.keys())
 
     def learning(self, epochs):
@@ -18,9 +18,11 @@ class QLearning:
         while epochs > 0:
             current_state = self.R[current_state_id]
             rnd_action_id = random.choice(list(current_state.keys()))
+
             res = self.cal_learning_step(current_state_id, rnd_action_id)
             if res is None:
                 epochs -= 1
+
                 current_state_id = random.choice(self.all_params)
             else:
                 current_state_id = res
@@ -28,6 +30,8 @@ class QLearning:
     def cal_learning_step(self, state, action):
         mx = 0
         non_zero = False
+        print (action)
+        print (self.R[action])
         for action in self.R[action]:
             if action[1] != 0:
                 non_zero = True
@@ -44,9 +48,11 @@ class QLearning:
 if __name__ == '__main__':
 
     bp = BoardPossitionParams()
-    q = QLearning(bp)
+    q = QLearning(bp,'res/final.bson')
+
+
     print("start")
-    q.learning(100)
+    q.learning(1)
     print("save")
-    q.params.save(q.all_params, "burger5000.bson")
+    q.params.save(q.all_params, "res/final100.bson")
 

@@ -42,11 +42,11 @@ class State:
     def get_next_states(self):
         boards = self.board.get_possible_moves()
         new_states = []
-        for board in boards:
-            new_states.append(State(board, 0, self))
+        for b in boards:
+            new_states.append(State(b, 0, self))
     
         
-        return new_states[1:]
+        return new_states
 
     def get_round(self):
         return self.board.round

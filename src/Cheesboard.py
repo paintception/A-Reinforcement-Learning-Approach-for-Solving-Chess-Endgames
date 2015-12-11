@@ -34,6 +34,7 @@ class ChessBoard:
         else:
             self.valid = False
 
+    # TODO Check this function, it seems to be wrong
     def board_id(self):
         b_king = self.get_b_king()
         w_king = self.get_w_king()

@@ -56,7 +56,9 @@ class BoardPossitionParams(BaseParams):
                     r = -100
                 nxt_pos[nxt_moves.board_id()] = (r, 0)
 
-            nxt_prms[board.board_id()] = nxt_pos
+            nxt_pos.pop((wk_r,wk_c,wr_r,wr_c,bk_r,bk_c))
+
+            nxt_prms[(wk_r,wk_c,wr_r,wr_c,bk_r,bk_c)] = nxt_pos
             # if board.board_id() not in nxt_prms.keys():
             #     print("res")
             #     print(count)
@@ -79,18 +81,7 @@ class BoardPossitionParams(BaseParams):
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
-    # ap = bp.get_all_params()
-    # print(len(ap))
-    # # (7, 6, 4, 3, 1, 0)
-    # print(ap[100] in ap)
-    # print(ap[100])
-    # p = bp.get_possible_nxt_prms()
-    # print(len(p))
-    # print(ap[100] in p.keys())
-    # bp.save(p, "burgerID.bson")
-    op = bp.load("burgerID.bson")
-    print(len(op))
-    # print(len(op))
-    # print(op[(7, 5, 3, 5, 5, 2)])
-    # print(type(op))
-    # print(len(op))
+
+    x = bp.get_possible_nxt_prms()
+
+    bp.save(x,'final.bson')

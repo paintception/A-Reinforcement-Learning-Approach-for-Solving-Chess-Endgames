@@ -59,7 +59,9 @@ class King(Piece):
             return False
 
     def restricted_positions(self):
-        return [self.possible_moves(),(self.row,self.col)]
+        lis = self.possible_moves()
+        lis.append((self.row,self.col))
+        return lis
 
     def possible_moves(self):
         rows = []
@@ -122,7 +124,9 @@ class Rook(Piece):
         return pos
 
     def restricted_positions(self,kw):
-        return [self.possible_moves(kw),(self.row,self.col)]
+        lis = self.possible_moves(kw)
+        lis.append((self.row,self.col))
+        return lis
 
     def checkMoveValidity(self, piece, row, col):
         if row == piece.row and col == piece.col:

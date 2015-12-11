@@ -50,9 +50,12 @@ if __name__ == '__main__':
     bp = BoardPossitionParams()
     q = QLearning(bp,'res/final.bson')
 
-
+    for x in q.R.keys():
+        print (len(q.R[x]))
     print("start")
-    q.learning(1)
+
+
+    #q.learning(1)
     print("save")
-    q.params.save(q.all_params, "res/final100.bson")
+    q.params.save(q.all_params, "res/final1.bson")
 

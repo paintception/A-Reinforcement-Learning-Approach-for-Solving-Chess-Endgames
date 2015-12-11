@@ -33,7 +33,10 @@ class ChessBoard:
         else:
             self.valid = False
 
-    # TODO Check this function, it seems to be wrong
+        if self.state == ChessBoard.BLACK_KING_CHECKED:
+            self.valid = False
+
+
     def board_id(self):
         b_king = self.get_b_king()
         w_king = self.get_w_king()
@@ -180,7 +183,8 @@ class ChessBoard:
 
         restr = (set(kw.possible_moves()) | set(rw.possible_moves(kw)))
 
-        checked = (kb.row,kb.col) in rw.restricted_positions(kw)
+        res =  rw.restricted_positions(kw)
+        checked = (kb.row,kb.col) in res
 
         if checked and set(kb.possible_moves()).issubset(restr):
             self.state = ChessBoard.BLACK_KING_CHECKMATE

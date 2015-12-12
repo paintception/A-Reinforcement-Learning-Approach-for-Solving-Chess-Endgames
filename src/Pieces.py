@@ -80,6 +80,7 @@ class King(Piece):
         moves = [(row, col) for row in rows for col in cols]
         moves.remove((self.row, self.col))
 
+
         return moves
 
 

@@ -28,11 +28,14 @@ class BoardPossitionParams(BaseParams):
         params = []
         for wk_r in range(0,8):
             for wk_c in range(0,8):
-                for wr_r in range(0,8):
-                    for wr_c in range(0,8):
+                for wr_r in range(-1,8):
+                    for wr_c in range(-1,8):
                         for bk_r in range(0,8):
                             for bk_c in range(0,8):
-                                params.append((wk_r, wk_c, wr_r, wr_c, bk_r, bk_c))
+                                for white_plays in range(0,2):
+                                    if(wr_r == -1 and wr_c != -1 or wr_r!=-1 and wr_c == -1) :
+                                        continue
+                                    params.append((wk_r, wk_c, wr_r, wr_c, bk_r, bk_c,white_plays))
         return params
 
     def get_possible_nxt_prms(self, params=None):
@@ -41,11 +44,12 @@ class BoardPossitionParams(BaseParams):
 
         count = 0
         nxt_prms = {}
-        for wk_r, wk_c, wr_r, wr_c, bk_r, bk_c in params:
+        for wk_r, wk_c, wr_r, wr_c, bk_r, bk_c,white_plays in params:
 
             board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
                                wr=Rook(wr_r, wr_c, Piece.WHITE),
-                               bk=King(bk_r, bk_c, Piece.BLACK))
+                               bk=King(bk_r, bk_c, Piece.BLACK),
+                               white_plays=white_plays)
             if not board.valid:
                 continue
 
@@ -60,7 +64,7 @@ class BoardPossitionParams(BaseParams):
 
 
 
-            nxt_prms[(wk_r,wk_c,wr_r,wr_c,bk_r,bk_c)] = nxt_pos
+            nxt_prms[(wk_r,wk_c,wr_r,wr_c,bk_r,bk_c,white_plays)] = nxt_pos
 
             count += 1
             if count % 1000 == 0:
@@ -82,19 +86,28 @@ if __name__ == '__main__':
 
     bp = BoardPossitionParams()
     par = bp.get_possible_nxt_prms()
-    bp.save(par,'res/final.bson')
+    bp.save(par,'res/final_final.bson')
 
 
     """
-    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c = 7, 3, 3, 2, 1, 2
+    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = (4, 0, 6, 1, 7, 0, 0)
     board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
                                wr=Rook(wr_r, wr_c, Piece.WHITE),
-                               bk=King(bk_r, bk_c, Piece.BLACK),debug=True)
+                               bk=King(bk_r, bk_c, Piece.BLACK),debug=True,white_plays=0)
+
     board.draw()
     print (board.valid)
     next_poss = board.get_possible_moves()
 
     print (len(next_poss))
     for ps in next_poss:
+        wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = ps.board_id()
+
+        board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
+                            wr=Rook(wr_r, wr_c, Piece.WHITE),
+                            bk=King(bk_r, bk_c, Piece.BLACK),
+                            white_plays=white_plays
+                            );
+        board.draw()
         print (ps.board_id())
     """

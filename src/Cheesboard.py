@@ -237,7 +237,7 @@ class ChessBoard:
 
     def draw(self):
         print('State: ', self.state)
-        print('Round:', self.round)
+        # print('Round:', self.round)
         print('Player:', "BLACK" if self.turn is Piece.BLACK else "WHITE")
         sys.stdout.write('  ')
         for k in range(0, 8):

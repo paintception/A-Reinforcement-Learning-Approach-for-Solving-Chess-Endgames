@@ -5,9 +5,9 @@ from Play import Play
 
 if __name__ == '__main__':
 
-    epochs = 100000
+    epochs = 1000000
     games_to_play = 1000
-    gamma = 0.8
+    gamma = 0.9
     base_memory = 'res/memory.bson'
     file = base_memory.split('.')[0] + '_trained_' + str(epochs) + '_' + str(int(gamma*10)) + '.bson'
 

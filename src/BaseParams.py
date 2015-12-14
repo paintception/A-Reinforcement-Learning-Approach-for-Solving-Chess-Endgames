@@ -62,8 +62,6 @@ class BoardPossitionParams(BaseParams):
                     r = -100
                 nxt_pos[nxt_moves.board_id()] = (r, 0)
 
-
-
             nxt_prms[(wk_r,wk_c,wr_r,wr_c,bk_r,bk_c,white_plays)] = nxt_pos
 
             count += 1
@@ -86,17 +84,21 @@ if __name__ == '__main__':
 
     bp = BoardPossitionParams()
     par = bp.get_possible_nxt_prms()
-    bp.save(par,'res/final_final.bson')
+    bp.save(par, 'res/memory_test.bson')
+
+
+
 
 
     """
-    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = (4, 0, 6, 1, 7, 0, 0)
+    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = (2, 6, 0, 0, 0, 7, 1)
     board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
                                wr=Rook(wr_r, wr_c, Piece.WHITE),
                                bk=King(bk_r, bk_c, Piece.BLACK),debug=True,white_plays=0)
 
     board.draw()
     print (board.valid)
+
     next_poss = board.get_possible_moves()
 
     print (len(next_poss))

@@ -137,8 +137,9 @@ class ChessBoard:
 
     def get_possible_moves(self):
         pieces_to_play = []
-        if self.state is ChessBoard.DRAW:
+        if self.state is ChessBoard.DRAW or self.state is ChessBoard.BLACK_KING_CHECKMATE or not self.valid:
             return []
+
         if self.turn == Piece.WHITE:
             pieces_to_play = [self.get_w_king(), self.get_w_rook()]
         else:
@@ -294,9 +295,9 @@ class ChessBoard:
 
 if __name__ == '__main__':
     # White plays first
-    rw = Rook(1, 1, Piece.WHITE)
-    kb = King(0, 2, Piece.BLACK)
-    kw = King(2, 2, Piece.WHITE)
+    rw = Rook(2, 7, Piece.WHITE)
+    kb = King(2, 6, Piece.BLACK)
+    kw = King(0, 7, Piece.WHITE)
     board = ChessBoard(kw, rw, kb, white_plays=0,debug=True)
     print(board.board_id())
     board.draw()

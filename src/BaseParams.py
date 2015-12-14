@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     bp = BoardPossitionParams()
     par = bp.get_possible_nxt_prms()
-    bp.save(par, 'res/memory_test.bson')
+    bp.save(par, 'res/memory_tt.bson')
 
 
 

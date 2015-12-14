@@ -5,7 +5,7 @@ from Play import Play
 
 if __name__ == '__main__':
 
-    epochs = 1000000
+    epochs = 1000
     games_to_play = 1000
     gamma = 0.9
     base_memory = 'res/memory.bson'
@@ -16,8 +16,11 @@ if __name__ == '__main__':
         print ('[Info] The agent is training for',epochs,'epochs')
         bp = BoardPossitionParams()
         q = QLearning(bp, gamma, epochs, base_memory)
+        q.learning()
         q.save()
+        exit(0)
     # Play
+    print ('Memory exists..\nPlaying...')
     play = Play(file, False)
     wins, rounds = play.play_stats(games_to_play)
 

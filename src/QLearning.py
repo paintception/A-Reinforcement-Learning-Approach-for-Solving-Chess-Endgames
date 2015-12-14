@@ -28,7 +28,7 @@ class QLearning:
         # current_state_id = (1, 2, 3, 1, 1, 0, 1)
 
         while epochs > 0:
-
+            print (epochs)
             possible_states = self.R[current_state_id]
 
             if not possible_states :
@@ -98,7 +98,7 @@ class QLearning:
 if __name__ == '__main__':
 
     bp = BoardPossitionParams()
-    q = QLearning(bp,0.8,1000000,'res/memory.bson')
+    q = QLearning(bp,0.9,1000000,'res/memory.bson')
 
     last = time.time()
     ttime , wins = q.learning()

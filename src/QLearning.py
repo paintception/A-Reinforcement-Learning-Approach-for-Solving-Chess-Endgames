@@ -28,7 +28,7 @@ class QLearning:
         # current_state_id = (1, 2, 3, 1, 1, 0, 1)
 
         while epochs > 0:
-            print (epochs)
+
             possible_states = self.R[current_state_id]
 
             if not possible_states :
@@ -46,34 +46,37 @@ class QLearning:
             rnd_action_id = random.choice(list(possible_states.keys()))
             # rnd_action_id = 1,2,3,0,1,0,0
 
-            res = self.cal_learning_step(current_state_id, rnd_action_id)
+            current_state_id = self.cal_learning_step(current_state_id, rnd_action_id)
 
-            if res is None:
 
-                board = self.get_board(rnd_action_id)
-                print('Why doesn\'t get in here?')
-                print('State: ', board.state)
-                epochs -= 1
-                current_state_id = random.choice(self.all_params)
-            else:
-                current_state_id = res
-
+            print( epochs )
         now = time.time()
         return (now-last), (wins/total)
 
     def cal_learning_step(self, state, action):
-        mx = 0
+
         poss_actions = self.R[action]
 
+        white_plays = state[6]
+        mx = None
+        if white_plays is 1:
+            mx = -100
+        else:
+            mx = 100
+        flag = False
         for a in poss_actions:
-            # if poss_actions[a][1] != 0:
-            #   non_zero = True
-            if poss_actions[a][1] >= mx:
+
+            if poss_actions[a][1] is None:
+                continue
+            flag = True
+            if white_plays and  poss_actions[a][1] >= mx:
+                mx = poss_actions[a][1]
+            elif not white_plays and poss_actions[a][1] <= mx:
                 mx = poss_actions[a][1]
 
-        r_curr = self.R[state][action][0]
-
-        self.R[state][action] = (r_curr, r_curr + mx * self.gamma)
+        if flag:
+            r_curr = self.R[state][action][0]
+            self.R[state][action] = (r_curr, r_curr + mx * self.gamma)
 
         return action
 
@@ -98,7 +101,7 @@ class QLearning:
 if __name__ == '__main__':
 
     bp = BoardPossitionParams()
-    q = QLearning(bp,0.9,1000000,'res/memory.bson')
+    q = QLearning(bp,0.9,1000000,'res/memory_02.bson')
 
     last = time.time()
     ttime , wins = q.learning()

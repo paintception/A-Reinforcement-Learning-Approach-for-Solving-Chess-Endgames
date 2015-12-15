@@ -31,7 +31,7 @@ class Play:
         turn = 0
         win = False
 
-        if not  state_id:
+        if not state_id:
             current_state_id = random.choice(list(self.R))
         else:
             current_state_id = state_id
@@ -81,6 +81,8 @@ class Play:
         max_q = -1000
         max_state = None
         for state in states:
+            if states[state][1] is None:
+                continue
 
             if states[state][1] > max_q:
                 max_q= states[state][1]
@@ -93,6 +95,9 @@ class Play:
         min_q = 1000
         min_state = None
         for state in states:
+
+            if states[state][1] is None:
+                continue
 
             if states[state][1] < min_q:
                 min_q= states[state][1]
@@ -117,8 +122,8 @@ def get_board(state_id):
                             )
 if __name__ == '__main__':
 
-    p = Play('res/memory_trained_1000_9.bson',True)
-    wins, turns = p.play_stats(1000)
+    p = Play('res/memory_02_trained_100000_8.bson',True)
+    wins, turns = p.play_stats(1)
     #wins, turns = p.play()
     print (wins, turns)
 

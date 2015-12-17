@@ -26,19 +26,23 @@ class QLearning:
         total = epochs
         current_state_id = random.choice(self.all_params)
 
+        visited_pos = []
+
         while epochs > 0:
-            #print (epochs)
+
             possible_states = self.R[current_state_id]
 
-            if not possible_states:
+            if not possible_states or current_state_id in visited_pos:
 
                 epochs -= 1
 
                 current_state_id = random.choice(self.all_params)
+                visited_pos = []
                 continue
 
             rnd_action_id = random.choice(list(possible_states.keys()))
 
+            visited_pos.append(current_state_id)
             current_state_id = self.cal_learning_step(current_state_id, rnd_action_id)
 
 
@@ -49,22 +53,26 @@ class QLearning:
         mx = 0
         poss_actions = self.R[action]
 
-        white_plays = state[6];
-        if white_plays is True:
-            mx = 0
+        white_plays = state[6]
+        if white_plays == 1:
+            mx = -10000000000000
         else:
-            mx = 100
+            mx = 1000000000000000
 
+        non_zero = False
         for a in poss_actions:
-            # if poss_actions[a][1] != 0:
-            #   non_zero = True
-            if white_plays and poss_actions[a] >= mx:
+            if white_plays == 1 and poss_actions[a] != 0 and poss_actions[a] >= mx:
+                non_zero = True
                 mx = poss_actions[a]
-            if not white_plays and poss_actions[a] != 0 and poss_actions[a] <= mx:
+            if white_plays == 0 and poss_actions[a] != 0 and poss_actions[a] <= mx:
+                non_zero = True
                 mx = poss_actions[a]
+
+        if non_zero is False:
+            mx = 0
 
         r_curr = self.R[state][action]
-        self.R[state][action] = mx * self.gamma
+        self.R[state][action] = r_curr + 0.8*(mx * self.gamma - r_curr)
 
         return action
 
@@ -89,7 +97,7 @@ class QLearning:
 if __name__ == '__main__':
 
     bp = BoardPossitionParams()
-    q = QLearning(bp,0.5,1000000,'res/memory.bson')
+    q = QLearning(bp,0.5,500000,'res/memory100-100.bson')
 
     last = time.time()
     ttime , wins = q.learning()

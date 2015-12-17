@@ -60,9 +60,9 @@ class Play:
 
             max_state_id = None
             if current_state_id[6] is 0:
-                max_state_id = self.get_max_state(next_states)
-            else:
                 max_state_id = self.get_min_state(next_states)
+            else:
+                max_state_id = self.get_max_state(next_states)
 
             if self.debug:
                 print ('Turn: ',turn)
@@ -85,6 +85,9 @@ class Play:
             if states[state] > max_q:
                 max_q= states[state]
                 max_state = state
+            elif states[state] == 100:
+                max_state = state
+                break
 
         return max_state
 
@@ -97,6 +100,9 @@ class Play:
             if states[state] < min_q:
                 min_q= states[state]
                 min_state = state
+            elif states[state] == -100:
+                min_state = state
+                break
 
         return min_state
 
@@ -117,7 +123,7 @@ def get_board(state_id):
                             )
 if __name__ == '__main__':
 
-    p = Play('res/memory_trained_100000_5.bson',True)
+    p = Play('res/memory_trained_100000_8.bson',True)
     wins, turns = p.play_stats(1)
     #wins, turns = p.play()
     print (wins, turns)

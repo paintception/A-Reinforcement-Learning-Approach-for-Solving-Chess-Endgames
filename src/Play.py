@@ -60,9 +60,9 @@ class Play:
 
             max_state_id = None
             if current_state_id[6] is 0:
-                max_state_id = self.get_max_state(next_states)
-            else:
                 max_state_id = self.get_min_state(next_states)
+            else:
+                max_state_id = self.get_max_state(next_states)
 
             if self.debug:
                 print ('Turn: ',turn)

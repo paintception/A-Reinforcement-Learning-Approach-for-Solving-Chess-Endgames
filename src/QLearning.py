@@ -28,7 +28,7 @@ class QLearning:
         # current_state_id = (1, 2, 3, 1, 1, 0, 1)
 
         while epochs > 0:
-            print (epochs)
+            #print (epochs)
             possible_states = self.R[current_state_id]
 
             if not possible_states :
@@ -65,15 +65,22 @@ class QLearning:
         mx = 0
         poss_actions = self.R[action]
 
+        white_plays = state[6];
+        if white_plays is True:
+            mx = 0
+        else:
+            mx = 100
+
         for a in poss_actions:
             # if poss_actions[a][1] != 0:
             #   non_zero = True
-            if poss_actions[a][1] >= mx:
-                mx = poss_actions[a][1]
+            if white_plays and poss_actions[a] >= mx:
+                mx = poss_actions[a]
+            if not white_plays and mx != 0 and poss_actions[a] <= mx:
+                mx = poss_actions[a]
 
-        r_curr = self.R[state][action][0]
-
-        self.R[state][action] = (r_curr, r_curr + mx * self.gamma)
+        r_curr = self.R[state][action]
+        self.R[state][action] = r_curr + mx * self.gamma
 
         return action
 
@@ -98,7 +105,7 @@ class QLearning:
 if __name__ == '__main__':
 
     bp = BoardPossitionParams()
-    q = QLearning(bp,0.9,1000000,'res/memory.bson')
+    q = QLearning(bp,0.5,1000000,'res/memory.bson')
 
     last = time.time()
     ttime , wins = q.learning()

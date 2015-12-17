@@ -78,24 +78,24 @@ class Play:
 
     @staticmethod
     def get_max_state(states):
-        max_q = -1000
+        max_q = -10000000000000
         max_state = None
         for state in states:
 
-            if states[state][1] > max_q:
-                max_q= states[state][1]
+            if states[state] > max_q:
+                max_q= states[state]
                 max_state = state
 
         return max_state
 
     @staticmethod
     def get_min_state(states):
-        min_q = 1000
+        min_q = 10000000000000000
         min_state = None
         for state in states:
 
-            if states[state][1] < min_q:
-                min_q= states[state][1]
+            if states[state] < min_q:
+                min_q= states[state]
                 min_state = state
 
         return min_state
@@ -117,8 +117,8 @@ def get_board(state_id):
                             )
 if __name__ == '__main__':
 
-    p = Play('res/memory_trained_1000_9.bson',True)
-    wins, turns = p.play_stats(1000)
+    p = Play('res/memory_trained_10000_5.bson',True)
+    wins, turns = p.play_stats(1)
     #wins, turns = p.play()
     print (wins, turns)
 

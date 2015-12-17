@@ -25,38 +25,22 @@ class QLearning:
             epochs = self.epochs
         total = epochs
         current_state_id = random.choice(self.all_params)
-        # current_state_id = (1, 2, 3, 1, 1, 0, 1)
 
         while epochs > 0:
             #print (epochs)
             possible_states = self.R[current_state_id]
 
-            if not possible_states :
-
-                board = self.get_board(current_state_id)
-                # print (board.state,'->',current_state_id)
+            if not possible_states:
 
                 epochs -= 1
-                if board.state is ChessBoard.BLACK_KING_CHECKMATE:
-                    wins += 1
 
                 current_state_id = random.choice(self.all_params)
                 continue
 
             rnd_action_id = random.choice(list(possible_states.keys()))
-            # rnd_action_id = 1,2,3,0,1,0,0
 
-            res = self.cal_learning_step(current_state_id, rnd_action_id)
+            current_state_id = self.cal_learning_step(current_state_id, rnd_action_id)
 
-            if res is None:
-
-                board = self.get_board(rnd_action_id)
-                print('Why doesn\'t get in here?')
-                print('State: ', board.state)
-                epochs -= 1
-                current_state_id = random.choice(self.all_params)
-            else:
-                current_state_id = res
 
         now = time.time()
         return (now-last), (wins/total)
@@ -76,11 +60,11 @@ class QLearning:
             #   non_zero = True
             if white_plays and poss_actions[a] >= mx:
                 mx = poss_actions[a]
-            if not white_plays and mx != 0 and poss_actions[a] <= mx:
+            if not white_plays and poss_actions[a] != 0 and poss_actions[a] <= mx:
                 mx = poss_actions[a]
 
         r_curr = self.R[state][action]
-        self.R[state][action] = r_curr + mx * self.gamma
+        self.R[state][action] = mx * self.gamma
 
         return action
 

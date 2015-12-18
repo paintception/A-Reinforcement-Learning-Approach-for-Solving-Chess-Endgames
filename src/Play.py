@@ -78,11 +78,15 @@ class Play:
 
     @staticmethod
     def get_max_state(states):
-        max_q = -10000000000000
+        max_q = -1000000000000000**50
         max_state = None
+
+        if random.random() < 0.1 :
+           return random.choice(list(states.keys()))
+
         for state in states:
 
-            if states[state] > max_q:
+            if states[state] > max_q and states[state] != 0:
                 max_q= states[state]
                 max_state = state
             elif states[state] == 100:
@@ -123,7 +127,7 @@ def get_board(state_id):
                             )
 if __name__ == '__main__':
 
-    p = Play('res/memory_trained_100000_8.bson',True)
+    p = Play('res/memory100-100_trained_500000_5.bson',True)
     wins, turns = p.play_stats(1)
     #wins, turns = p.play()
     print (wins, turns)

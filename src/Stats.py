@@ -5,7 +5,7 @@ from Play import Play
 
 if __name__ == '__main__':
 
-    epochs = 100000
+    epochs = 1000000
     games_to_play = 1000
     gamma = 0.5
     base_memory = 'res/memory100-100.bson'

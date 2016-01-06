@@ -55,24 +55,22 @@ class QLearning:
 
         white_plays = state[6]
         if white_plays == 1:
-            mx = -10000000000000
+            mx = 1
         else:
-            mx = 1000000000000000
+            mx = 0
 
         non_zero = False
         for a in poss_actions:
-            if white_plays == 1 and poss_actions[a] != 0 and poss_actions[a] >= mx:
+            if white_plays == 1 and poss_actions[a] != -1 and poss_actions[a] <= mx:
                 non_zero = True
                 mx = poss_actions[a]
-            if white_plays == 0 and poss_actions[a] != 0 and poss_actions[a] <= mx:
+            if white_plays == 0 and poss_actions[a] != -1 and poss_actions[a] >= mx:
                 non_zero = True
                 mx = poss_actions[a]
 
-        if non_zero is False:
-            mx = 0
-
-        r_curr = self.R[state][action]
-        self.R[state][action] = r_curr + 0.8*(mx * self.gamma - r_curr)
+        if non_zero is True:
+            r_curr = self.R[state][action]
+            self.R[state][action] = r_curr + 0.8*(mx * self.gamma - r_curr)
 
         return action
 
@@ -97,7 +95,7 @@ class QLearning:
 if __name__ == '__main__':
 
     bp = BoardPossitionParams()
-    q = QLearning(bp,0.5,500000,'res/memory100-100.bson')
+    q = QLearning(bp,0.5,500000,'res/memory1-0.bson')
 
     last = time.time()
     ttime , wins = q.learning()

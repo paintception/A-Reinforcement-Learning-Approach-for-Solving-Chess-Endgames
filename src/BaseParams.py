@@ -55,11 +55,11 @@ class BoardPossitionParams(BaseParams):
 
             nxt_pos = {}
             for nxt_moves in board.get_possible_moves():
-                r = 0
+                r = -1
                 if nxt_moves.state == ChessBoard.BLACK_KING_CHECKMATE:
-                    r = 100
+                    r = 1
                 elif nxt_moves.state == ChessBoard.DRAW:
-                    r = -100
+                    r = 0
                 nxt_pos[nxt_moves.board_id()] = r
 
             nxt_prms[(wk_r,wk_c,wr_r,wr_c,bk_r,bk_c,white_plays)] = nxt_pos
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     bp = BoardPossitionParams()
     par = bp.get_possible_nxt_prms()
-    bp.save(par, 'res/memory100-100.bson')
+    bp.save(par, 'res/memory1-0.bson')
 
 
 

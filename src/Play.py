@@ -81,8 +81,8 @@ class Play:
         max_q = -1000000000000000**50
         max_state = None
 
-        if random.random() < 0.1 :
-           return random.choice(list(states.keys()))
+        # if random.random() < 0.1 :
+        #    return random.choice(list(states.keys()))
 
         for state in states:
 
@@ -127,7 +127,7 @@ def get_board(state_id):
                             )
 if __name__ == '__main__':
 
-    p = Play('res/memory100-100_trained_500000_5.bson',True)
+    p = Play('res/memory1-0_trained_2000000_5.bson',True)
     wins, turns = p.play_stats(1)
     #wins, turns = p.play()
     print (wins, turns)

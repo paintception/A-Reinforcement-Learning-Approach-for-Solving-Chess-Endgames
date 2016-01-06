@@ -5,10 +5,10 @@ from Play import Play
 
 if __name__ == '__main__':
 
-    epochs = 1000000
+    epochs = 5000000
     games_to_play = 1000
     gamma = 0.5
-    base_memory = 'res/memory100-100.bson'
+    base_memory = 'res/memory1-0.bson'
     file = base_memory.split('.')[0] + '_trained_' + str(epochs) + '_' + str(int(gamma*10)) + '.bson'
 
     #Check if is trained

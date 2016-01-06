@@ -9,13 +9,14 @@ import time
 
 class QLearning:
 
-    def __init__(self,params,gamma,epochs,name):
+    def __init__(self, params, gamma, learning_rate, epochs, name):
         self.params = params
         self.epochs = epochs
         self.file_name = name
         self.gamma = gamma
         self.R = self.params.load(name)
         self.all_params = list(self.R.keys())
+        self.learning_rate = learning_rate
 
     def learning(self, epochs=None):
         last = time.time()
@@ -70,7 +71,7 @@ class QLearning:
 
         if non_zero is True:
             r_curr = self.R[state][action]
-            self.R[state][action] = r_curr + 0.8*(mx * self.gamma - r_curr)
+            self.R[state][action] = r_curr + self.learning_rate*(mx * self.gamma - r_curr)
 
         return action
 
@@ -95,7 +96,7 @@ class QLearning:
 if __name__ == '__main__':
 
     bp = BoardPossitionParams()
-    q = QLearning(bp,0.5,500000,'res/memory1-0.bson')
+    q = QLearning(bp,0.5,0.8,500000,'res/memory1-0.bson')
 
     last = time.time()
     ttime , wins = q.learning()

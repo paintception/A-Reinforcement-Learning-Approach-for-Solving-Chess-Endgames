@@ -93,6 +93,6 @@ class Parameters:
             return self.params
 
 if __name__ == '__main__':
-    p = Parameters(4)
+    p = Parameters(5)
     p.get_possible_nxt_prms()
     p.save('res/states.bson')

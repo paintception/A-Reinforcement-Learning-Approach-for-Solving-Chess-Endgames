@@ -1,7 +1,7 @@
 from Chessboard import Chessboard
 from Parameters import Parameters
 import random
-
+import numpy as np
 
 class QLearning:
     """
@@ -25,40 +25,56 @@ class QLearning:
         """
         epochs = self.epochs
         s0 = random.choice(self.all_states)
-        #s0 = (0,7,6,5,7,0,1)  # White is playing
-        #s0 = (5,2,0,0,7,3,0) # Black is playing
+        s0 = (2,2,0,0,4,2,1)
         while epochs:
             # Choose a random action from current state
             possible_actions = list(self.R[s0].keys())
-            #Chessboard.get_board(s0).draw()
-            # No possible moves, draw or win
-            if not possible_actions:
-                #Chessboard.get_board(s0).draw()
+
+            x = self.get_possible_moves_2_layers(s0);
+
+            if not x:
+
                 epochs -= 1
                 s0 = random.choice(self.all_states)
+                print(epochs)
                 continue
 
-            s1 = random.choice(possible_actions)
+            dd = np.array(x)
 
-            if s1[2] is s1[4] and s1[3] is s1[5]:
-                #Chessboard.get_board(s0).draw()
-                epochs -= 1
-                s0 = random.choice(self.all_states)
-                continue
-            """ DEBUG """
-            #s1 = (5,2,7,0,7,2,0) # White
-            #s1 = (0,7,6,1,7,0,0)
-            #s1 = (5,2,0,0,7,2,1) # Black
-            #Chessboard.get_board(s0).draw()
-            #Chessboard.get_board(s1).draw()
+            dd = dd[:,1]
 
-            q_value = self.gamma * self.find_min_max(s0, s1)
+            ind = np.argmax(dd)
+            val = np.amax(dd)
+
+
+            print (ind , '->',val)
+
+            q_value = self.gamma * val;
+
             if s0[6] is 1:
-                self.R[s0][s1] += q_value
-            else:
-                self.R[s0][s1] -= q_value
+                q_value = - q_value
 
-            s0 = s1
+            self.R[s0][x[ind][0]] += q_value
+
+            #Chessboard.get_board(s0,5).draw()
+            #Chessboard.get_board(x[ind][0],5).draw()
+
+            s0 = x[ind][0]
+
+    def get_possible_moves_2_layers(self, s0):
+        # Choose a random action from current state
+        possible_moves_1 = list(self.R[s0].keys())
+        l = []
+        for s1 in possible_moves_1:
+            if s1[2] is s1[4] and s1[3] is s1[5]:
+                continue
+            possible_moves_2 = (self.R[s1].keys())
+            if s1[2] is -1 and s1[3] is -1:
+                l.append([s1, self.R[s0][s1] - 100 ])
+            for s2 in possible_moves_2:
+                l.append([s1, self.R[s0][s1] - self.R[s1][s2] ])
+
+        return l
 
     def find_min_max(self, s0, s1):
         """

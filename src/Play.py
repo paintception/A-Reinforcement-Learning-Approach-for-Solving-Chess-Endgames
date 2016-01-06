@@ -61,6 +61,7 @@ class Play:
             max_state_id = None
             if current_state_id[6] is 0:
                 max_state_id = self.get_min_state(next_states)
+                # max_state_id = random.choice(list(next_states.keys()))
             else:
                 max_state_id = self.get_max_state(next_states)
 
@@ -69,7 +70,7 @@ class Play:
                 board.draw()
                 for i in next_states:
                     print (i,'->',next_states[i])
-                print ('Max:', max_state_id)
+                print ('Max:', max_state_id,'->',next_states[max_state_id])
                 input()
 
             current_state_id = max_state_id
@@ -78,7 +79,7 @@ class Play:
 
     @staticmethod
     def get_max_state(states):
-        max_q = -1000000000000000**50
+        max_q = -1
         max_state = None
 
         # if random.random() < 0.1 :
@@ -97,7 +98,7 @@ class Play:
 
     @staticmethod
     def get_min_state(states):
-        min_q = 10000000000000000
+        min_q = 1
         min_state = None
         for state in states:
 
@@ -127,7 +128,7 @@ def get_board(state_id):
                             )
 if __name__ == '__main__':
 
-    p = Play('res/memory1-0_trained_2000000_5.bson',True)
+    p = Play('res/memory1-0_trained_5000000_5.bson',True)
     wins, turns = p.play_stats(1)
     #wins, turns = p.play()
     print (wins, turns)

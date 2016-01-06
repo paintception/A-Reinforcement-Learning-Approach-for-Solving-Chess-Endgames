@@ -1,119 +1,107 @@
-from State import State
-from Cheesboard import ChessBoard
-from random import randint
-from Pieces import King, Rook, Piece
+from Chessboard import Chessboard
+from Parameters import Parameters
 import random
-from BaseParams import BoardPossitionParams
 
 
 class QLearning:
-
-    def __init__(self,params,name):
-        self.params = params
-        self.gamma = 0.5
+    """
+    The QLearning class
+    """
+    def __init__(self, gamma, epochs, name,dim=None):
+        self.params = Parameters()
+        self.gamma = gamma
+        self.epochs = epochs
+        self.file_name = name
         self.R = self.params.load(name)
-        self.all_params = list(self.R.keys())
+        self.all_states = list(self.R.keys())
+        if not dim:
+            self.N = 8
+        else:
+            self.N = dim
 
-    def learning(self, epochs):
-        wins = 0
-
-        current_state_id = random.choice(self.all_params)
-        #current_state_id = (6, 2, 4, 6, 3, 6, 0)
-        while epochs > 0:
-
-            board = self.get_board(current_state_id)
-            #board.draw()
-            #print(current_state_id)
-
-
-            possible_states = self.R[current_state_id]
-
-
-            if not possible_states :
-
-                board = self.get_board(current_state_id);
-                #board.update_state()
-                print (board.state)
-
-
+    def learning(self):
+        """
+        :return: The states with values
+        """
+        epochs = self.epochs
+        s0 = random.choice(self.all_states)
+        #s0 = (0,7,6,5,7,0,1)  # White is playing
+        #s0 = (5,2,0,0,7,3,0) # Black is playing
+        while epochs:
+            # Choose a random action from current state
+            possible_actions = list(self.R[s0].keys())
+            #Chessboard.get_board(s0).draw()
+            # No possible moves, draw or win
+            if not possible_actions:
+                #Chessboard.get_board(s0).draw()
                 epochs -= 1
-                if (board.state is ChessBoard.BLACK_KING_CHECKMATE):
-                    wins += 1
-
-
-                #board.draw()
-                current_state_id = random.choice(self.all_params)
+                s0 = random.choice(self.all_states)
                 continue
 
-            rnd_action_id = random.choice(list(possible_states.keys()))
+            s1 = random.choice(possible_actions)
 
-            res = self.cal_learning_step(current_state_id, rnd_action_id)
-            if res is None:
-
-                board = self.get_board(rnd_action_id)
-                print('Why doesn\'t get in here?')
-                print('State: ', board.state)
+            if s1[2] is s1[4] and s1[3] is s1[5]:
+                #Chessboard.get_board(s0).draw()
                 epochs -= 1
-                current_state_id = random.choice(self.all_params)
+                s0 = random.choice(self.all_states)
+                continue
+            """ DEBUG """
+            #s1 = (5,2,7,0,7,2,0) # White
+            #s1 = (0,7,6,1,7,0,0)
+            #s1 = (5,2,0,0,7,2,1) # Black
+            #Chessboard.get_board(s0).draw()
+            #Chessboard.get_board(s1).draw()
+
+            q_value = self.gamma * self.find_min_max(s0, s1)
+            if s0[6] is 1:
+                self.R[s0][s1] += q_value
             else:
-                current_state_id = res
+                self.R[s0][s1] -= q_value
 
-        print ('Wins:',wins)
+            s0 = s1
 
-    def cal_learning_step(self, state, action):
+    def find_min_max(self, s0, s1):
         """
-
-        :type action: object
+        :param s0: Current state
+        :param s1: Next state
+        :return:
         """
-        mx = 0
-        non_zero = False
+        # Check who is playing
+        white_plays = s0[6]
 
-        poss_actions = self.R[action]
+        # Find the next possible moves from s1(action)
+        possible_states = self.R[s1]
 
-        for a in poss_actions:
-            if poss_actions[a][1] != 0:
-                non_zero = True
-            if poss_actions[a][0] >= mx:
-                mx = poss_actions[a][0]
+        if not possible_states and white_plays:
+            return 100
+        if not possible_states and not white_plays:
+            return -100
 
-        if non_zero:
-            r = self.R[state][action][0]
-            self.R[state][action] = (r, mx*self.gamma)
-            return None
+
+        # Set max value to a very small number
+        if white_plays is 0:
+            mxn = -10000000
         else:
-            return action
+            mxn = 10000000
 
-    def get_board(self,state_id):
-         wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = state_id
+        for a in possible_states:
+            x = possible_states[a]
 
-         return  ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
-                            wr=Rook(wr_r, wr_c, Piece.WHITE),
-                            bk=King(bk_r, bk_c, Piece.BLACK),
-                            white_plays=white_plays,
-                            debug=True
-                            );
-    
-    
+            if white_plays is 0 and x > mxn:
+                mxn = x
+            if not (white_plays is 0) and x < mxn:
+                mxn = x
+
+        return mxn
+
+    def save(self):
+
+        file = self.file_name.split('.')[0] + '_trained_' + str(self.epochs) + '_' + str(int(self.gamma * 10)) + '.bson'
+
+        print('Memory Saved:', file)
+        self.params.save(file, self.R)
+
 if __name__ == '__main__':
-
-    bp = BoardPossitionParams()
-    q = QLearning(bp,'res/final_final.bson')
-
-    """
-    current_state_id = (4, 0, 6, 1, 7, 0, 0)
-    board = q.get_board(current_state_id)
-    print(board.board_id())
-    board.draw()
-    poss = ( q.R[current_state_id])
-    for x in poss:
-        board = q.get_board(x)
-        print(board.board_id())
-        board.draw()
-    """
-
-    #for x in q.R.keys():
-    #    print (len(q.R[x]))
-
-    q.learning(100)
-    #q.params.save(q.all_params, "res/final100.bson")
-
+    q = QLearning(0.5, 100000, 'res/states.bson')
+    q.learning()
+    q.save()

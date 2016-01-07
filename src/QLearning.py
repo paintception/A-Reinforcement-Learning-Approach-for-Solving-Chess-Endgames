@@ -1,7 +1,3 @@
-from State import State
-from Cheesboard import ChessBoard
-from random import randint
-from Pieces import King, Rook, Piece
 import random
 from BaseParams import BoardPossitionParams
 import time

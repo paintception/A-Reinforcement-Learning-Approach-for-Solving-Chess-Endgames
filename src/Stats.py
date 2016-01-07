@@ -36,7 +36,7 @@ if __name__ == '__main__':
                 bp = BoardPossitionParams()
                 q = QLearning(bp, gamma/10,0.8, epoch, base_memory)
                 q.learning()
-                q.save()
+                q.save(fp)
                 #exit(0)
             # Play
             print ('Memory exists..\nPlaying...')

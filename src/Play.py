@@ -128,7 +128,7 @@ def get_board(state_id):
                             )
 if __name__ == '__main__':
 
-    p = Play('res/memory1-0_trained_5000000_5.bson',True)
+    p = Play('res/memory1-0_trained_100000_1.bson',True)
     wins, turns = p.play_stats(1)
     #wins, turns = p.play()
     print (wins, turns)

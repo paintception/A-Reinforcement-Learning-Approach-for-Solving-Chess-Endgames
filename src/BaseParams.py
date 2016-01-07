@@ -21,9 +21,10 @@ class BaseParams:
 
 
 class BoardPossitionParams(BaseParams):
-    """docstring for BoardPossitionParams"""
-
-
+    """
+    The purpose of this class is to build and save all the possible states
+    of the chessboard with two kings and a rook
+    """
     def get_all_params(self):
         params = []
         for wk_r in range(0,8):
@@ -71,11 +72,20 @@ class BoardPossitionParams(BaseParams):
         return nxt_prms
 
     def save(self, parms, filename):
-        to_save_parms = {}
+        """
+        :param params: The data to save
+        :param filename: The name of the file
+        :return: None
+        """
         with open(filename, 'wb') as outfile:
             pickle.dump(parms, outfile, pickle.HIGHEST_PROTOCOL)
 
     def load(self, filename):
+        """
+        Load parameters
+        :param filename: The name of the file
+        :return: Parameters
+        """
         with open(filename, 'rb') as infile:
             params = pickle.load(infile)
             return params
@@ -85,31 +95,3 @@ if __name__ == '__main__':
     bp = BoardPossitionParams()
     par = bp.get_possible_nxt_prms()
     bp.save(par, 'res/memory1-0.bson')
-
-
-
-
-
-    """
-    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = (2, 6, 0, 0, 0, 7, 1)
-    board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
-                               wr=Rook(wr_r, wr_c, Piece.WHITE),
-                               bk=King(bk_r, bk_c, Piece.BLACK),debug=True,white_plays=0)
-
-    board.draw()
-    print (board.valid)
-
-    next_poss = board.get_possible_moves()
-
-    print (len(next_poss))
-    for ps in next_poss:
-        wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = ps.board_id()
-
-        board = ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
-                            wr=Rook(wr_r, wr_c, Piece.WHITE),
-                            bk=King(bk_r, bk_c, Piece.BLACK),
-                            white_plays=white_plays
-                            );
-        board.draw()
-        print (ps.board_id())
-    """

@@ -8,6 +8,13 @@ class Piece():
     BLACK = 0
 
     def __init__(self, row,col, color):
+        """
+        :param row: Row index of the piece
+        :param col: Col index of the piece
+        :param color: Color of the piece
+        :except Exception: Wrong color
+        :return: None
+        """
         if not (color is self.WHITE or color is self.BLACK):
             raise Exception("Wrong color")
         self.row = row
@@ -15,15 +22,27 @@ class Piece():
         self.color = color
 
     def __str__(self):
+        """
+        :return: String representation
+        """
         return "%s(row - %d, col - %d)" %("W" if self.color==self.WHITE else "B", self.row, self.col)
 
     def __unicode__(self):
+        """
+        :return: String representation
+        """
         return "%s(row - %d, col - %d)" %("W" if self.color==self.WHITE else "B", self.row, self.col)
 
     def to_json(self):
         return { 'row' : self.row , 'col' : self.col }
 
     def move(self, d_row, d_col):
+        """
+        Move the piece to the desired coordinates
+        :param d_row: The desired row to move
+        :param d_col: The desired column to move
+        :return: True on success
+        """
         if self.check_borders(d_row, d_col) and self.check_pos(d_row, d_col):
             self.col = d_col
             self.row = d_row
@@ -31,6 +50,13 @@ class Piece():
         return False
     
     def check_borders(self, d_row, d_col):
+        """
+        Check if the coordinates are inside the board
+        :param d_row: The desired row
+        :param d_col: The desired column
+        :param N: Dimension
+        :return:
+        """
         if d_row < 0 or d_row > 7:
             return False
         if d_col < 0 or d_col > 7:
@@ -39,18 +65,39 @@ class Piece():
         return True
 
     def check_pos(self, d_row, d_col):
+        """
+        Check if the new position is valid
+        :param d_row: The desired row
+        :param d_col: The desired column
+        :return: True on success
+        """
         return False
 
     def restricted_positions(self):
+        """
+        :return: The restricted positions
+        """
         return []
 
     def possible_moves(self):
+        """
+        :return: The possible moves
+        """
         return []
 
 
 class King(Piece):
+    """
+    This is the King class which inherits from Piece
+    """
 
     def check_pos(self, d_row, d_col):
+        """
+        Check if the new position is valid
+        :param d_row: The desired row
+        :param d_col: The desired column
+        :return: True on success
+        """
         dist = abs(d_row-self.row) + abs(d_col-self.col)
 
         if dist == 1 or (dist == 2 and self.row !=  d_row and self.col != d_col):
@@ -85,6 +132,9 @@ class King(Piece):
 
 
 class Rook(Piece):
+    """
+    This is the Rook class which inherits from Piece
+    """
 
     def check_pos(self, d_row, d_col):
         if d_row == self.row and d_col != self.col:

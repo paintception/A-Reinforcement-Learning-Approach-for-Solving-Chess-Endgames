@@ -2,28 +2,27 @@ import os.path
 from BaseParams import BoardPossitionParams
 import pickle
 import random
-from Cheesboard import ChessBoard,King,Rook,Piece
+from Cheesboard import ChessBoard, King, Rook, Piece
 
 
 class Play:
-
-    def __init__(self,file_name,debug=None):
+    def __init__(self, file_name, debug=None):
         self.file_name = file_name
         self.R = self.load(file_name)
         self.debug = debug
 
-    def play_stats(self,games_to_play):
+    def play_stats(self, games_to_play):
         wins = 0
         turns = 0
-        for i in range(0,games_to_play):
+        for i in range(0, games_to_play):
             win, turn = self.play()
             if win:
-                wins +=1
+                wins += 1
                 turns += turn
 
         if wins is 0:
-            return 0,0
-        return (wins/games_to_play), (turns/wins)
+            return 0, 0
+        return (wins / games_to_play), (turns / wins)
 
     def play(self, state_id=None):
 
@@ -31,7 +30,7 @@ class Play:
         turn = 0
         win = False
 
-        if not  state_id:
+        if not state_id:
             current_state_id = random.choice(list(self.R))
         else:
             current_state_id = state_id
@@ -59,18 +58,18 @@ class Play:
                 break
 
             max_state_id = None
-            if current_state_id[6] is 0:
+            if current_state_id[6] is 0:  # If it`s black turn select move with minimal q
                 max_state_id = self.get_min_state(next_states)
-                # max_state_id = random.choice(list(next_states.keys()))
-            else:
+                # max_state_id = random.choice(list(next_states.keys()))  # Black can play randomly
+            else:  # If it`s black turn select move with maximum q
                 max_state_id = self.get_max_state(next_states)
 
             if self.debug:
-                print ('Turn: ',turn)
+                print('Turn: ', turn)
                 board.draw()
                 for i in next_states:
-                    print (i,'->',next_states[i])
-                print ('Max:', max_state_id,'->',next_states[max_state_id])
+                    print(i, '->', next_states[i])
+                print('Max:', max_state_id, '->', next_states[max_state_id])
                 input()
 
             current_state_id = max_state_id
@@ -88,7 +87,7 @@ class Play:
         for state in states:
 
             if states[state] > max_q and states[state] != 0:
-                max_q= states[state]
+                max_q = states[state]
                 max_state = state
             elif states[state] == 100:
                 max_state = state
@@ -103,7 +102,7 @@ class Play:
         for state in states:
 
             if states[state] < min_q:
-                min_q= states[state]
+                min_q = states[state]
                 min_state = state
             elif states[state] == -100:
                 min_state = state
@@ -119,18 +118,17 @@ class Play:
 
 
 def get_board(state_id):
-         wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = state_id
-         return ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
-                            wr=Rook(wr_r, wr_c, Piece.WHITE),
-                            bk=King(bk_r, bk_c, Piece.BLACK),
-                            white_plays=white_plays,
-                            debug=True
-                            )
+    wk_r, wk_c, wr_r, wr_c, bk_r, bk_c, white_plays = state_id
+    return ChessBoard(wk=King(wk_r, wk_c, Piece.WHITE),
+                      wr=Rook(wr_r, wr_c, Piece.WHITE),
+                      bk=King(bk_r, bk_c, Piece.BLACK),
+                      white_plays=white_plays,
+                      debug=True
+                      )
+
+
 if __name__ == '__main__':
-
-    p = Play('res/memory1-0_trained_100000_1.bson',True)
+    p = Play('res/memory1-0_trained_5000000_5.bson', True)
     wins, turns = p.play_stats(1)
-    #wins, turns = p.play()
-    print (wins, turns)
-
-
+    # wins, turns = p.play()
+    print(wins, turns)

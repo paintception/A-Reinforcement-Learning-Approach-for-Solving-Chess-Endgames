@@ -9,7 +9,10 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
-    epochs = [ x for x in range(1000000,10500000,500000)]
+
+    epochs = [1000000] 
+    #epochs = [ x for x in range(100,1000,100)]
+
     games_to_play = 10000
 
     base_memory = 'res/memory1-0.bson'
@@ -24,21 +27,20 @@ if __name__ == '__main__':
 
         # CHANGE THIS WITH GAMMA FOR YARUSLAV IS 0.3 0.5,
         i= 0
-        for gamma in range(1,3,1):
-            gamma = float(gamma/10.0)
-            fp = base_memory.split('.')[0] + '_trained_' + str(epoch) + '_' + str(int(gamma*10)) + '.bson'
+        for gamma,i in enumerate(range(1,3,1)):
+            fp = base_memory.split('.')[0] + '_trained_' + str(epoch) + '_' + str(int(gamma/10)) + '.bson'
 
             #Check if is trained
             if not os.path.isfile(fp):
                 print ('[Info] The agent is training for',epoch,'epochs')
                 bp = BoardPossitionParams()
-                q = QLearning(bp, gamma, 1,epoch, base_memory)
+                q = QLearning(bp, gamma,0.8, epoch, base_memory)
                 q.learning()
                 q.save()
                 #exit(0)
             # Play
             print ('Memory exists..\nPlaying...')
-            play = Play(fp, True)
+            play = Play(fp, False)
             wins, rounds = play.play_stats(games_to_play)
 
             print('Win perc:', wins,'Average Rounds:', rounds)

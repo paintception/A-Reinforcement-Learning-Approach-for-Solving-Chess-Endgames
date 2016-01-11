@@ -87,9 +87,9 @@ class QLearning:
 
         return action
 
-    def save(self, fp):
+    def save(self):
 
-        file = fp #self.file_name.split('.')[0] + '_trained_' + str(self.epochs) + '_' + str(int(self.gamma * 10)) + '.bson'
+        file = self.file_name.split('.')[0] + '_trained_' + str(self.epochs) + '_' + str(int(self.gamma * 10)) + '.bson'
 
         print('Memory Saved:', file)
         self.params.save(self.R, file)
@@ -97,7 +97,7 @@ class QLearning:
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
-    q = QLearning(bp, 0.5, 0.8, 5000000, 'res/memory1-0.bson')
+    q = QLearning(bp, 0.5, 0.8, 1000000, 'res/memory1-0.bson')
 
     last = time.time()
     ttime = q.learning()

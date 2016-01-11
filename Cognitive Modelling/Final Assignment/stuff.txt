@@ -1,0 +1,14 @@
+#Cognitive Modelling Final Paper 4 pages all included
+
+* Introduction ----> research question	Discussion of the literature shouldn't be too long! From general too specific
+* Method, Description of the experiment
+* Results
+* Describe the Model and the Results
+* Final Discussion ----> discuss what you've found, connected to the general introductory question and take it back to the general level
+* References?!
+
+* How many statistics to implement, not too elaborated, what's a good fit!? R^2 is a method of measuring used in literature
+* You can change the order 
+
+
+

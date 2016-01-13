@@ -173,7 +173,8 @@ class BoardPossitionTDParamsKB(BaseParams):
     of the chessboard with two kings and a rook
     """
     def get_all_params(self):
-        params = []
+        params = {}
+        count = 0
         for wk_r in range(0,8):
             for wk_c in range(0,8):
                 for wbw_r in range(-1,8):
@@ -187,7 +188,26 @@ class BoardPossitionTDParamsKB(BaseParams):
                                                 continue
                                             if(wbb_r == -1 and wbb_c != -1 or wbb_r!=-1 and wbb_c == -1) :
                                                 continue
-                                            params.append((wk_r, wk_c, wbw_r, wbw_c, wbb_r, wbb_c, bk_r, bk_c,white_plays))
+                                            board = ChessBoardKB(wk=King(wk_r, wk_c, Piece.WHITE),
+                                                                 wbw=WhiteBishop(wbw_r, wbw_c, Piece.WHITE),
+                                                                 wbb=BlackBishop(wbb_r, wbb_c, Piece.WHITE),
+                                                                 bk=King(bk_r, bk_c, Piece.BLACK),
+                                                                 white_plays=white_plays)
+                                            if not board.valid:
+                                                continue
+
+                                            r = -1
+                                            if board.state == ChessBoard.BLACK_KING_CHECKMATE:
+                                                r = 1
+                                            elif board.state == ChessBoard.DRAW:
+                                                r = 0
+
+                                            params[(wk_r, wk_c, wbw_r, wbw_c, wbb_r, wbb_c, bk_r, bk_c, white_plays)] = r
+
+                                            count += 1
+                                            if count % 1000 == 0:
+                                                print(count)
+
         return params
 
     def get_possible_nxt_prms(self, params=None):
@@ -247,6 +267,6 @@ if __name__ == '__main__':
     # par = bp.get_possible_nxt_prms()
     # bp.save(par, 'res/memory1-0.bson')
     bpb = BoardPossitionTDParamsKB()
-    par = bpb.get_possible_nxt_prms()
+    par = bpb.get_all_params()
     bpb.save(par, 'resTD_BK/memory1-0.bson')
 

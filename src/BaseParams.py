@@ -210,38 +210,6 @@ class BoardPossitionTDParamsKB(BaseParams):
 
         return params
 
-    def get_possible_nxt_prms(self, params=None):
-        if params is None:
-            params = self.get_all_params()
-
-        count = 0
-        nxt_prms = {}
-        print("start")
-        for wk_r, wk_c, wbw_r, wbw_c, wbb_r, wbb_c, bk_r, bk_c, white_plays in params:
-
-            board = ChessBoardKB(wk=King(wk_r, wk_c, Piece.WHITE),
-                                 wbw=WhiteBishop(wbw_r, wbw_c, Piece.WHITE),
-                                 wbb=BlackBishop(wbb_r, wbb_c, Piece.WHITE),
-                                 bk=King(bk_r, bk_c, Piece.BLACK),
-                                 white_plays=white_plays)
-            if not board.valid:
-                continue
-
-
-            r = -1
-            if board.state == ChessBoard.BLACK_KING_CHECKMATE:
-                r = 1
-            elif board.state == ChessBoard.DRAW:
-                r = 0
-
-            nxt_prms[(wk_r, wk_c, wbw_r, wbw_c, wbb_r, wbb_c, bk_r, bk_c, white_plays)] = r
-
-            count += 1
-            if count % 1000 == 0:
-                print (count)
-
-        return nxt_prms
-
     def save(self, parms, filename):
         """
         :param params: The data to save

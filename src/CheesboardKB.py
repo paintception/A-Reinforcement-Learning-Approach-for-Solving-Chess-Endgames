@@ -1,5 +1,5 @@
 import sys
-from src.Pieces import King, Bishop, Piece, BlackBishop, WhiteBishop
+from Pieces import King, Bishop, Piece, BlackBishop, WhiteBishop
 import random
 import copy
 

@@ -188,7 +188,7 @@ class Game(cocos.layer.Layer):
 if __name__ == '__main__':
     base_memory = 'res/memory1-0.bson'
     epoch = 5000000
-    gamma = 0.6
+    gamma = 0.5
     fp = base_memory.split('.')[0] + '_trained_' + str(epoch) + '_' + str(int(gamma*10)) + '.bson'
 
     director.init(width=64*8, height=64*9, caption="Chess Game Engine",resizable=False)

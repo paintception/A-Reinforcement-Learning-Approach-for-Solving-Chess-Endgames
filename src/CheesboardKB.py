@@ -4,7 +4,7 @@ import random
 import copy
 
 
-class ChessBoard:
+class ChessBoardKB:
     NOTHING = 'PLAYING'
     BLACK_KING_CHECKED = 'BLACK_KING_CHECKED'
     BLACK_KING_CHECKMATE = 'BLACK_KING_CHECKMATE'
@@ -16,7 +16,7 @@ class ChessBoard:
         self.turn = Piece.WHITE
         if white_plays is not None:
             self.turn = white_plays
-        self.state = ChessBoard.NOTHING
+        self.state = ChessBoardKB.NOTHING
         self.debug = debug
         self.valid = True
 
@@ -36,7 +36,7 @@ class ChessBoard:
         else:
             self.valid = False
 
-            # if self.state == ChessBoard.BLACK_KING_CHECKED:
+            # if self.state == ChessBoardKB.BLACK_KING_CHECKED:
             #    self.valid = False
 
     def board_id(self):
@@ -108,7 +108,7 @@ class ChessBoard:
 
     def play_move(self, row, col, piece):
 
-        if self.state == ChessBoard.DRAW:
+        if self.state == ChessBoardKB.DRAW:
             return True
         w_king = self.get_w_king()
         w_bishop_white = self.get_w_bishop_white()
@@ -156,7 +156,7 @@ class ChessBoard:
 
     def get_possible_moves(self):
         pieces_to_play = []
-        if self.state is ChessBoard.DRAW or self.state is ChessBoard.BLACK_KING_CHECKMATE or not self.valid:
+        if self.state is ChessBoardKB.DRAW or self.state is ChessBoardKB.BLACK_KING_CHECKMATE or not self.valid:
             return []
 
         if self.turn == Piece.WHITE:
@@ -215,7 +215,7 @@ class ChessBoard:
                 bwb = p
 
         if bww is None or bwb is None:
-            self.state = ChessBoard.DRAW
+            self.state = ChessBoardKB.DRAW
             return
 
         restr = (set(kw.possible_moves()) | set(bww.possible_moves(kw)) | set(bwb.possible_moves(kw)))
@@ -224,14 +224,14 @@ class ChessBoard:
         checked = (kb.row, kb.col) in res
 
         if checked and set(kb.possible_moves()).issubset(restr):
-            self.state = ChessBoard.BLACK_KING_CHECKMATE
+            self.state = ChessBoardKB.BLACK_KING_CHECKMATE
         elif checked:
-            self.state = ChessBoard.BLACK_KING_CHECKED
+            self.state = ChessBoardKB.BLACK_KING_CHECKED
             self.turn = Piece.BLACK
         elif not checked and (set(kb.possible_moves())).issubset(restr):
-            self.state = ChessBoard.DRAW
+            self.state = ChessBoardKB.DRAW
         else:
-            self.state = ChessBoard.NOTHING
+            self.state = ChessBoardKB.NOTHING
 
     def change_turn(self):
         if self.turn == Piece.WHITE:
@@ -240,15 +240,15 @@ class ChessBoard:
             self.turn = Piece.WHITE
 
     def is_finished(self):
-        if self.state is ChessBoard.BLACK_KING_CHECKMATE or self.state is ChessBoard.DRAW:
+        if self.state is ChessBoardKB.BLACK_KING_CHECKMATE or self.state is ChessBoardKB.DRAW:
             return True
         return False
 
     @staticmethod
-    def get_random_chessboard():
+    def get_random_ChessBoardKB():
         rboard = None
         # while True:
-        #     rboard = ChessBoard(debug=True)
+        #     rboard = ChessBoardKB(debug=True)
         #     all_added = []
         #     all_added.append(rboard.add_piece(King(random.randint(0, 7), random.randint(0, 7), Piece.BLACK)))
         #     all_added.append(rboard.add_piece(King(random.randint(0, 7), random.randint(0, 7), Piece.WHITE)))
@@ -256,8 +256,8 @@ class ChessBoard:
         # 
         #     if all(all_added):
         #         rboard.update_state()
-        #         if (rboard.state is not ChessBoard.BLACK_KING_CHECKMATE) and (
-        #             rboard.state is not ChessBoard.BLACK_KING_CHECKED):
+        #         if (rboard.state is not ChessBoardKB.BLACK_KING_CHECKMATE) and (
+        #             rboard.state is not ChessBoardKB.BLACK_KING_CHECKED):
         #             break
         return rboard
 
@@ -325,7 +325,7 @@ if __name__ == '__main__':
     bwb = BlackBishop(3, 7, Piece.WHITE)
     kb = King(1, 1, Piece.BLACK)
     kw = King(0, 7, Piece.WHITE)
-    board = ChessBoard(kw, bww, bwb, kb, white_plays=True, debug=True)
+    board = ChessBoardKB(kw, bww, bwb, kb, white_plays=True, debug=True)
     print(board.board_id())
     board.draw()
     # exit(1)
@@ -337,7 +337,7 @@ if __name__ == '__main__':
     print(board.board_id())
     board.draw()
 
-    board = ChessBoard.get_random_chessboard()
+    board = ChessBoardKB.get_random_ChessBoardKB()
 
     # board.add_piece(rw)
     # board.add_piece(kb)

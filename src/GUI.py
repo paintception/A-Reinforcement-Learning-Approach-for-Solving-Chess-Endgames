@@ -16,6 +16,7 @@ class Game(cocos.layer.Layer):
         self.file_name = file_name
         self.R = self.load(file_name)
         self.butt = 1
+        self.finish = 0
         label = cocos.text.Label('Round:',
                                   font_name='Times New Roman',
                                   font_size=32,
@@ -69,12 +70,13 @@ class Game(cocos.layer.Layer):
                                   font_size=32,
                                   anchor_x='left', anchor_y='bottom')
         self.round.position = 64*2, 0
-        self.add(self.round,z=4)
+        self.add(self.round, z=4)
 
         self.play()
 
     def on_key_press(self, key, modifiers):
-
+        if self.finish is 1:
+            return
         print('Continue:', key)
         self.butt += 1
         if self.butt is 1:
@@ -98,8 +100,32 @@ class Game(cocos.layer.Layer):
         if self.current_state_id[6] is 0:
             self.next_state_id = self.get_min_state(next_states)
         else:
-             self.next_state_id  = self.get_max_state(next_states)
+            self.next_state_id  = self.get_max_state(next_states)
 
+        if self.next_state_id is None or self.board.turn>40:
+            self.set_position(self.current_state_id)
+            self.bking.z = 0
+            self.finish = 1
+            box = cocos.layer.ColorLayer(255, 255, 255, 200, width=64*8, height=72)
+            box.position = 0, 64*8
+            self.add(box,z = 3)
+            if self.board.state is ChessBoard.BLACK_KING_CHECKMATE:
+                label = cocos.text.Label('CHECKMATE',
+                              font_name='Comic Sans MS',
+                              font_size=52,
+                              color=(90,135,161, 255),
+                              anchor_x='center', anchor_y='top')
+            else:
+                label = cocos.text.Label('DRAW',
+                          font_name='Comic Sans MS',
+                          font_size=52,
+                          color=(90,135,161, 255),
+                          anchor_x='center', anchor_y='top')
+
+            label.position = 64*4, 64*9
+            self.add(label,z=4)
+
+            return
         for i in next_states:
             print (i,'->', next_states[i])
         print('MaxMin:',  self.next_state_id ,'->',next_states[self.next_state_id ])
@@ -188,7 +214,7 @@ class Game(cocos.layer.Layer):
 if __name__ == '__main__':
     base_memory = 'res/memory1-0.bson'
     epoch = 5000000
-    gamma = 0.5
+    gamma = 0.1
     fp = base_memory.split('.')[0] + '_trained_' + str(epoch) + '_' + str(int(gamma*10)) + '.bson'
 
     director.init(width=64*8, height=64*9, caption="Chess Game Engine",resizable=False)

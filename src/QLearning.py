@@ -97,7 +97,7 @@ class QLearning:
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
-    q = QLearning(bp, 0.5, 0.8, 1000000, 'res/memory1-0.bson')
+    q = QLearning(bp, 0.99, 0.8, 5000000, 'res/memory1-0.bson')
 
     last = time.time()
     ttime = q.learning()

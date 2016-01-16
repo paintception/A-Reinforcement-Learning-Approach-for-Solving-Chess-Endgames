@@ -32,13 +32,15 @@ class Play:
 
         if not state_id:
             current_state_id = random.choice(list(self.R))
+            while abs(current_state_id[2]-current_state_id[4]) + abs(current_state_id[3]-current_state_id[5]) == 1:
+                current_state_id = random.choice(list(self.R))
         else:
             current_state_id = state_id
 
         while True:
 
-            if not current_state_id or turn >= 40:
-                break
+
+
 
             board = get_board(current_state_id)
 
@@ -128,7 +130,7 @@ def get_board(state_id):
 
 
 if __name__ == '__main__':
-    p = Play('res/memory1-0_trained_1000000_5.bson', True)
-    wins, turns = p.play_stats(1)
-    # wins, turns = p.play()
+    p = Play('res/memory1-0_trained_5000000_6.bson', True)
+    #wins, turns = p.play_stats(1)
+    wins, turns = p.play((7,1,5,6,4,5,0))
     print(wins, turns)

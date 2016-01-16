@@ -73,13 +73,13 @@ class Piece():
         """
         return False
 
-    def restricted_positions(self):
+    def restricted_positions(self, king=None):
         """
         :return: The restricted positions
         """
         return []
 
-    def possible_moves(self):
+    def possible_moves(self, king=None):
         """
         :return: The possible moves
         """
@@ -100,17 +100,17 @@ class King(Piece):
         """
         dist = abs(d_row-self.row) + abs(d_col-self.col)
 
-        if dist == 1 or (dist == 2 and self.row !=  d_row and self.col != d_col):
+        if dist == 1 or (dist == 2 and self.row != d_row and self.col != d_col):
             return True
         else:
             return False
 
-    def restricted_positions(self):
+    def restricted_positions(self, king=None):
         lis = self.possible_moves()
         lis.append((self.row,self.col))
         return lis
 
-    def possible_moves(self):
+    def possible_moves(self, king=None):
         rows = []
         cols = []
         if self.row + 1 <= 7:
@@ -126,7 +126,6 @@ class King(Piece):
 
         moves = [(row, col) for row in rows for col in cols]
         moves.remove((self.row, self.col))
-
 
         return moves
 
@@ -144,7 +143,7 @@ class Rook(Piece):
 
         return False
 
-    def possible_moves(self,king):
+    def possible_moves(self, king=None):
         pos = []
         for x in range(0,8):
             if x != self.row:
@@ -152,10 +151,9 @@ class Rook(Piece):
             if x != self.col:
                 pos.append((self.row, x))
 
-        for p in pos :
+        for p in pos:
 
-
-            if p == (king.row,king.col):
+            if p == (king.row, king.col):
                 pos.remove(p)
 
             if (self.row == king.row and king.col > self.col):
@@ -171,15 +169,14 @@ class Rook(Piece):
                 if p[0]<king.row:
                     pos.remove(p)
 
-
         return pos
 
-    def restricted_positions(self,kw):
-        lis = self.possible_moves(kw)
-        lis.append((self.row,self.col))
+    def restricted_positions(self, king=None):
+        lis = self.possible_moves(king)
+        lis.append((self.row, self.col))
         return lis
 
-    def checkMoveValidity(self, piece, row, col):
+    def check_move_validity(self, piece, row, col):
         if row == piece.row and col == piece.col:
             return False
         if col < piece.col and col < self.col and  self.col > piece.col and piece.row == self.row:
@@ -193,7 +190,75 @@ class Rook(Piece):
         return True
 
 
+class Bishop(Piece):
 
+    def move(self, d_row, d_col):
+        """
+        Move the piece to the desired coordinates
+        :param d_row: The desired row to move
+        :param d_col: The desired column to move
+        :return: True on success
+        """
+        if self.check_borders(d_row, d_col):
+            self.col = d_col
+            self.row = d_row
+            return True
+        return False
+
+    def check_pos(self, d_row, d_col):
+        """
+        Check if the next move is valid
+        :param d_row: The desired row
+        :param d_col: The desired column
+        :return: True on success
+        """
+        return (d_row, d_col) in self.possible_moves()
+
+    def restricted_positions(self, king=None):
+        """
+        :return: The restricted positions
+        """
+        return self.possible_moves(king)
+
+    def possible_moves(self, king=None):
+        """
+        :return: The possible moves
+        """
+        line1 = []
+        for k in range(1, 8):
+            if king is not None and (self.row - k, self.col - k) == (king.row, king.col):
+                line1.clear()
+            else:
+                line1.append((self.row - k, self.col - k))
+
+        for k in range(1, 8):
+            if king is not None and (self.row + k, self.col + k) == (king.row, king.col):
+                break
+            else:
+                line1.append((self.row + k, self.col + k))
+
+        line2 = []
+        for k in range(1, 8):
+            if king is not None and (self.row - k, self.col + k) == (king.row, king.col):
+                line2.clear()
+            else:
+                line2.append((self.row - k, self.col + k))
+
+        for k in range(1, 8):
+            if king is not None and (self.row + k, self.col - k) == (king.row, king.col):
+                break
+            else:
+                line2.append((self.row + k, self.col - k))
+
+        return list(set(line1) | set(line2))
+
+
+class BlackBishop(Bishop):
+    pass
+
+
+class WhiteBishop(Bishop):
+    pass
 
 if __name__ == '__main__':
     print("King")

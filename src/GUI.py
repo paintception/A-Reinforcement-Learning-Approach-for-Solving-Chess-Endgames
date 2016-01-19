@@ -102,14 +102,18 @@ class Game(cocos.layer.Layer):
         else:
             self.next_state_id  = self.get_max_state(next_states)
 
-        if self.next_state_id is None or self.board.turn>40:
+        board = self.get_board(self.current_state_id)
+
+        if board.state is ChessBoard.BLACK_KING_CHECKMATE or self.board.turn>40:
             self.set_position(self.current_state_id)
             self.bking.z = 0
             self.finish = 1
             box = cocos.layer.ColorLayer(255, 255, 255, 200, width=64*8, height=72)
             box.position = 0, 64*8
             self.add(box,z = 3)
-            if self.board.state is ChessBoard.BLACK_KING_CHECKMATE:
+
+            print("Self State:", board.state)
+            if board.state is self.board.BLACK_KING_CHECKMATE:
                 label = cocos.text.Label('CHECKMATE',
                               font_name='Comic Sans MS',
                               font_size=52,
@@ -214,7 +218,7 @@ class Game(cocos.layer.Layer):
 if __name__ == '__main__':
     base_memory = 'res/memory1-0.bson'
     epoch = 5000000
-    gamma = 0.1
+    gamma = 0.5
     fp = base_memory.split('.')[0] + '_trained_' + str(epoch) + '_' + str(int(gamma*10)) + '.bson'
 
     director.init(width=64*8, height=64*9, caption="Chess Game Engine",resizable=False)

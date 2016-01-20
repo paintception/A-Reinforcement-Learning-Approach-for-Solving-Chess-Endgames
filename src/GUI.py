@@ -19,16 +19,16 @@ class Game(cocos.layer.Layer):
         self.finish = 0
         label = cocos.text.Label('Round:',
                                   font_name='Times New Roman',
-                                  font_size=32,
+                                  font_size=26,
                                   anchor_x='left', anchor_y='bottom')
         label.position = 0, 0
         self.add(label,z=4)
 
         label = cocos.text.Label('Player:',
                                   font_name='Times New Roman',
-                                  font_size=32,
+                                  font_size=26,
                                   anchor_x='left', anchor_y='bottom')
-        label.position = 64*5-32, 0
+        label.position = 64*4, 0
         self.add(label,z=4)
 
 
@@ -218,7 +218,7 @@ class Game(cocos.layer.Layer):
 if __name__ == '__main__':
     base_memory = 'res/memory1-0.bson'
     epoch = 5000000
-    gamma = 0.5
+    gamma = 0.6
     fp = base_memory.split('.')[0] + '_trained_' + str(epoch) + '_' + str(int(gamma*10)) + '.bson'
 
     director.init(width=64*8, height=64*9, caption="Chess Game Engine",resizable=False)

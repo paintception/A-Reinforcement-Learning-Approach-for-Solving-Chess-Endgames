@@ -26,37 +26,35 @@ class Play:
 
     def play(self, state_id=None):
 
-        current_state_id = None
         turn = 0
         win = False
 
-        if not state_id:
+        if state_id is None:
             current_state_id = random.choice(list(self.R))
-            while abs(current_state_id[2]-current_state_id[4]) + abs(current_state_id[3]-current_state_id[5]) == 1:
-                current_state_id = random.choice(list(self.R))
         else:
             current_state_id = state_id
 
         while True:
-
-
-
 
             board = get_board(current_state_id)
 
             if current_state_id[6] is 1:
                 turn += 1
 
+            if turn == 41:
+                break
+
             next_states = self.R[current_state_id]
 
             if not next_states:
-                board = get_board(current_state_id)
+                board = get_board(state_id=current_state_id)
 
                 if self.debug:
                     board.draw()
 
                 if board.state == ChessBoard.BLACK_KING_CHECKMATE:
                     win = True
+
                 break
 
             max_state_id = None
@@ -81,34 +79,25 @@ class Play:
     @staticmethod
     def get_max_state(states):
         max_q = -1
-        max_state = None
-
-        # if random.random() < 0.1 :
-        #    return random.choice(list(states.keys()))
+        max_state = random.choice(list(states.keys()))
 
         for state in states:
 
-            if states[state] > max_q and states[state] != 0:
+            if states[state] > max_q:
                 max_q = states[state]
                 max_state = state
-            elif states[state] == 100:
-                max_state = state
-                break
 
         return max_state
 
     @staticmethod
     def get_min_state(states):
         min_q = 1
-        min_state = None
+        min_state = random.choice(list(states.keys()))
         for state in states:
 
             if states[state] < min_q:
                 min_q = states[state]
                 min_state = state
-            elif states[state] == -100:
-                min_state = state
-                break
 
         return min_state
 
@@ -130,7 +119,7 @@ def get_board(state_id):
 
 
 if __name__ == '__main__':
-    p = Play('res/memory1-0_trained_5000000_6.bson', True)
+    p = Play('res/memory1-0_trained_1000000_9.bson', True)
     #wins, turns = p.play_stats(1)
-    wins, turns = p.play((7,1,5,6,4,5,0))
+    wins, turns = p.play((7,1,6,6,4,5,0))
     print(wins, turns)

@@ -8,7 +8,7 @@ class QLearning:
     The QLearning class
     """
 
-    def __init__(self, params, gamma, learning_rate, epochs, name):
+    def __init__(self, params, gamma, learning_rate, epochs, eps, name):
         self.params = params
         self.epochs = epochs
         self.file_name = name
@@ -16,6 +16,7 @@ class QLearning:
         self.R = self.params.load(name)
         self.all_params = list(self.R.keys())
         self.learning_rate = learning_rate
+        self.eps = eps
 
     def learning(self, epochs=None):
         """
@@ -50,8 +51,13 @@ class QLearning:
                 # Start new episode
                 continue
 
-            # Select random action for for current state
-            rnd_action_id = random.choice(list(possible_states.keys()))
+            if random.random() <= self.eps:
+                # Select random action for for current state
+                rnd_action_id = random.choice(list(possible_states.keys()))
+            else:
+                rnd_action_id = self._get_max(current_state_id)
+                if rnd_action_id is None:
+                    rnd_action_id = random.choice(list(possible_states.keys()))
 
             visited_pos.append(current_state_id)
             # Do learning step
@@ -60,9 +66,9 @@ class QLearning:
         now = time.time()
         return now - last
 
-    def _cal_learning_step(self, state, action):
+    def _cal_learning_step(self, state, next_state):
         mx = 0
-        poss_actions = self.R[action]
+        poss_actions = self.R[next_state]
 
         white_plays = state[6]
         if white_plays == 1:
@@ -82,14 +88,36 @@ class QLearning:
 
         # If min/max not initial was found update Q value
         if non_zero is True:
-            r_curr = self.R[state][action]
-            self.R[state][action] = r_curr + self.learning_rate * (mx * self.gamma - r_curr)
+            r_curr = self.R[state][next_state]
+            self.R[state][next_state] = r_curr + self.learning_rate * (mx * self.gamma - r_curr)
 
-        return action
+        return next_state
+
+    def _get_max(self, state):
+        poss_actions = self.R[state]
+
+        white_plays = state[6]
+        if white_plays == 1:
+            mx = 0
+        else:
+            mx = 1
+
+        max_action = None
+
+        for a in poss_actions:
+            if white_plays == 1 and poss_actions[a] != -1 and poss_actions[a] >= mx:
+                max_action = a
+                mx = poss_actions[a]
+            if white_plays == 0 and poss_actions[a] != -1 and poss_actions[a] <= mx:
+                max_action = a
+                mx = poss_actions[a]
+
+        return max_action
 
     def save(self):
 
-        file = self.file_name.split('.')[0] + '_trained_' + str(self.epochs) + '_' + str(int(self.gamma * 10)) + '.bson'
+        file = self.file_name.split('.')[0] + '_Q_trained_ep' + str(self.epochs) + '_g' + str(int(self.gamma * 10)) + \
+               '_l' + str(int(self.learning_rate * 10)) + '_e' + str(int(self.eps * 10)) + '.bson'
 
         print('Memory Saved:', file)
         self.params.save(self.R, file)
@@ -97,7 +125,7 @@ class QLearning:
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
-    q = QLearning(bp, 0.99, 0.8, 5000000, 'res/memory1-0.bson')
+    q = QLearning(bp, gamma=0.99, learning_rate=0.8, epochs=1000000, eps=1.0, name='res/memory1-0.bson')
 
     last = time.time()
     ttime = q.learning()

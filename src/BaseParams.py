@@ -231,10 +231,10 @@ class BoardPossitionTDParamsKB(BaseParams):
 
 if __name__ == '__main__':
 
-    # bp = BoardPossitionParams()
-    # par = bp.get_possible_nxt_prms()
-    # bp.save(par, 'res/memory1-0.bson')
-    bpb = BoardPossitionTDParamsKB()
-    par = bpb.get_all_params()
-    bpb.save(par, 'resTD_BK/memory1-0.bson')
+    bp = BoardPossitionParams()
+    par = bp.get_possible_nxt_prms()
+    bp.save(par, 'res/memory1-0.bson')
+    # bpb = BoardPossitionTDParamsKB()
+    # par = bpb.get_all_params()
+    # bpb.save(par, 'resTD_BK/memory1-0.bson')
 

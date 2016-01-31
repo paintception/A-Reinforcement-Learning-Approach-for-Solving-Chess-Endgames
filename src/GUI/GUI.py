@@ -3,7 +3,7 @@ import pyglet
 import random
 import pickle
 from cocos.director import director
-from Cheesboard import ChessBoard,King,Rook,Piece
+from src.Cheesboard import ChessBoard,King,Rook,Piece
 
 
 class Game(cocos.layer.Layer):

@@ -42,7 +42,8 @@ class QLearning:
 
             # If is checkmate, draw or loos state it doesn`t have any next possible states so end episode.
             # Also ends episode if it visits previously visited position
-            if not possible_states or current_state_id in visited_pos:
+            # if not possible_states or current_state_id in visited_pos:
+            if not possible_states:
                 epochs -= 1
 
                 # Select new initial state for episode

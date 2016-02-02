@@ -15,7 +15,7 @@ if __name__ == '__main__':
     fp = base_memory.split('.')[0] + '_Q_trained_ep' + str(epoch) + '_g' + str(int(gamma * 10)) + \
                '_l' + str(int(learning_rate * 10)) + '_e' + str(int(eps * 10)) + '.bson'
 
-    play = Play(fp, False)
+    play = Play(fp, True)
     wins, rounds = play.play_stats(games_to_play)
 
     print('Win perc:', wins,'Average Rounds:', rounds)

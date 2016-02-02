@@ -66,8 +66,6 @@ class SARSALearning:
                         action_id = random.choice(list(possible_states.keys()))
                 continue
 
-
-
             visited_pos.append(current_state_id)
             # Do learning step
             current_state_id, action_id = self._cal_learning_step(current_state_id, action_id)
@@ -80,34 +78,19 @@ class SARSALearning:
         poss_actions = self.R[next_state]
         if not poss_actions:
             return next_state, None
-        #
-        # white_plays = state[6]
-        # if white_plays == 1:
-        #     mx = 1
-        # else:
-        #     mx = 0
-        #
-        # non_zero = False
-        # # Looking for min action for White and max for Black
-        # for a in poss_actions:
-        #     if white_plays == 1 and poss_actions[a] != -1 and poss_actions[a] <= mx:
-        #         non_zero = True
-        #         mx = poss_actions[a]
-        #     if white_plays == 0 and poss_actions[a] != -1 and poss_actions[a] >= mx:
-        #         non_zero = True
-        #         mx = poss_actions[a]
 
         if random.random() <= self.eps:
             rnd_action_id = random.choice(list(poss_actions.keys()))
             mx = poss_actions[rnd_action_id]
         else:
-            rnd_action_id, mx = self._get_max(next_state)
+            rnd_action_id, mx = self._get_max_reverse(next_state)
             if rnd_action_id is None:
                 rnd_action_id = random.choice(list(poss_actions.keys()))
                 mx = poss_actions[rnd_action_id]
 
-        r_curr = self.R[state][next_state]
-        self.R[state][next_state] = r_curr + self.learning_rate * (mx * self.gamma - r_curr)
+        if not mx == -1:
+            r_curr = self.R[state][next_state]
+            self.R[state][next_state] = r_curr + self.learning_rate * (mx * self.gamma - r_curr)
 
         return next_state, rnd_action_id
 
@@ -132,10 +115,31 @@ class SARSALearning:
 
         return max_action, mx
 
+    def _get_max_reverse(self, state):
+        poss_actions = self.R[state]
+
+        white_plays = state[6]
+        if white_plays == 1:
+            mx = 0
+        else:
+            mx = 1
+
+        max_action = None
+
+        for a in poss_actions:
+            if white_plays == 1 and poss_actions[a] != -1 and poss_actions[a] >= mx:
+                max_action = a
+                mx = poss_actions[a]
+            if white_plays == 0 and poss_actions[a] != -1 and poss_actions[a] <= mx:
+                max_action = a
+                mx = poss_actions[a]
+
+        return max_action, mx
+
     def save(self):
 
         file = self.file_name.split('.')[0] + '_SARSA_trained_ep' + str(self.epochs) + '_g' + str(int(self.gamma * 10)) + \
-               '_l' + str(int(self.learning_rate * 10)) + '_e' + str(int(self.eps * 10)) + '.bson'
+               '_l' + str(int(self.learning_rate * 10)) + '_e' + str(int(self.eps * 100)) + '.bson'
 
         print('Memory Saved:', file)
         self.params.save(self.R, file)
@@ -143,7 +147,7 @@ class SARSALearning:
 
 if __name__ == '__main__':
     bp = BoardPossitionParams()
-    q = SARSALearning(bp, gamma=0.99, learning_rate=0.8, epochs=1000000, eps=0.5, name='res/memory1-0.bson')
+    q = SARSALearning(bp, gamma=0.99, learning_rate=0.8, epochs=2000000, eps=0.05, name='res/memory1-0.bson')
 
     last = time.time()
     ttime = q.learning()

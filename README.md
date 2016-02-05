@@ -12,6 +12,6 @@ In order to train an agent be sure to follow the following steps:
 6. If you want to see a command line GUI change Play(fp,TRUE)
 7. If you want to see the fancy GUI launch GUI from res /GUI being sure to use the correct memory file in the __main__
  
-** Have fun from Matthia, Yaroslav, Zacharias and Evangelos!!!!! **
+**Have fun from Matthia, Yaroslav, Zacharias and Evangelos!!!!!**
 
 @paintception @YAR0N @zacharias33 @Angelo404
